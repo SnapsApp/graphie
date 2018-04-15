@@ -31,13 +31,13 @@ const nodes = (state = INIT_STATE, action) => {
     case Atype.ADD_NODE: {
       const { id, data, incoming, outgoing } = action;
       const node = initNode(id, data, incoming, outgoing);
-      return Object.assign({}, state, { [id]: node});
+      return Object.assign({}, state, { [id]: node });
     }
     case Atype.UPDATE_NODE: {
       const { id, data } = action;
       let node = state[id];
       if (node) node = Object.assign({}, node, { data: nodeData(node.data, action) });
-      return Object.assign({}, state, { [id]: node});
+      return Object.assign({}, state, { [id]: node });
     }
     case Atype.DELETE_NODE: {
       const nState = Object.assign({}, state);
@@ -48,8 +48,35 @@ const nodes = (state = INIT_STATE, action) => {
   }
 }
 
+const edgeData = (data = {}, action) => {
+  switch (action.type) {
+    case Atype.UPDATE_EDGE: {
+      return action.data; // NOTE: placeholder
+    }
+    default: return data;
+  }
+}
+
 const edges = (state = INIT_STATE, action) => {
-  return state
+  switch (action.type) {
+    case Atype.ADD_EDGE: {
+      const { id, data, origin, destin } = action;
+      const edge = initEdge(id, data, origin, destin);
+      return Object.assign({}, state, { [id]: edge });
+    }
+    case Atype.UPDATE_EDGE: {
+      const { id, data } = action;
+      let edge = state[id];
+      if (edge) edge = Object.assign({}, edge, { data: edgeData(edge.data, action) });
+      return Object.assign({}, state, { [id]: edge});
+    }
+    case Atype.DELETE_EDGE: {
+      const nState = Object.assign({}, state);
+      delete nState[action.id];
+      return nState;
+    }
+    default: return state;
+  }
 }
 
 export default combineReducers({
