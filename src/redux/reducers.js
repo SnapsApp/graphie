@@ -1,8 +1,6 @@
 import { combineReducers } from 'redux';
 import { Atype } from './actions';
 
-const INIT_STATE = {};
-
 const initNode = (
   id = undefined,
   data = {},
@@ -26,7 +24,7 @@ const nodeData = (data = {}, action) => {
   }
 }
 
-const nodes = (state = INIT_STATE, action) => {
+const nodes = (state = {}, action) => {
   switch (action.type) {
     case Atype.ADD_NODE: {
       const { id, data, incoming, outgoing } = action;
@@ -57,7 +55,7 @@ const edgeData = (data = {}, action) => {
   }
 }
 
-const edges = (state = INIT_STATE, action) => {
+const edges = (state = {}, action) => {
   switch (action.type) {
     case Atype.ADD_EDGE: {
       const { id, data, origin, destin } = action;
