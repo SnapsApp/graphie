@@ -77,7 +77,10 @@ const edges = (state = {}, action) => {
   }
 }
 
-export default combineReducers({
-  nodes,
-  edges
-});
+export default function (state = {}, action) {
+  // pack data from state onto actions here.
+  return {
+    nodes: nodes(state.nodes, action),
+    edges: edges(state.edges, action),
+  }
+}

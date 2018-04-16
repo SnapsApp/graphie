@@ -10,9 +10,9 @@ const addNode = node => ({
   type: ADD_NODE,
   ...node
 })
-const deleteNode = node => ({
+const deleteNode = ({ id }) => ({
   type: DELETE_NODE,
-  ...node
+  id
 })
 const updateNode = ({ id, data }) => ({
   type: UPDATE_NODE,
@@ -20,11 +20,28 @@ const updateNode = ({ id, data }) => ({
   data
 })
 
+const addEdge = edge => ({
+  type: ADD_EDGE,
+  ...edge
+});
+const updateEdge = ({ id, data }) => ({
+  type: UPDATE_EDGE,
+  id,
+  data
+});
+const deleteEdge = ({ id }) => ({
+  type: DELETE_EDGE,
+  id
+});
 
 const Action = {
   addNode,
   deleteNode,
-  updateNode
+  updateNode,
+
+  addEdge,
+  deleteEdge,
+  updateEdge,
 }
 
 export const Atype = {
