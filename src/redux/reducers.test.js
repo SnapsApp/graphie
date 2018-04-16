@@ -80,21 +80,46 @@ describe('graph actions and reducer', () => {
       edges: {}
     })
   });
-  it(`should handle ${ Atype.ADD_EDGE }`, () => {
+  describe('adding edges', () => {
     const node1 = testNodes[0];
     const node2 = testNodes[1];
-    const edge = testEdges[0](node1, node2);
+    const edge = testEdges[0](node1.id, node2.id);
     const { addNode, addEdge } = Action;
     const actions = [addNode(node1), addNode(node2), addEdge(edge)];
 
-    expect(actions.reduce(reducers, undefined)).toEqual({
-      nodes: {
-        [node1.id]: fillNode(node1),
-        [node2.id]: fillNode(node2),
-      },
-      edges: {
-        [edge.id]: fillEdge(edge)
-      }
+    const updatedState = actions.reduce(reducers, undefined);
+
+    it('should add edge to edges branch of in state tree', () => {
+      expect(updatedState.edges[edge.id]).toEqual(fillEdge(edge));
+    });
+    it('should add edge to incoming and outgoing arrays of nodes', () => {
+      expect(updatedState.nodes[node1.id].outgoing)
+        .toEqual(expect.arrayContaining([edge.id]));
+      expect(updatedState.nodes[node2.id].incoming)
+        .toEqual(expect.arrayContaining([edge.id]));
+    });
+
+    const EMPTY_STATE = { nodes: {}, edges: {} };
+
+    it('should not add the edge when none of the nodes exist', () => {
+      const state = [{}, addEdge(edge)].reduce(reducers, undefined);
+      expect(state).toEqual(EMPTY_STATE);
     })
-  })
+    it('should not add the edge when one of the nodes doesn\'t exist', () => {
+      const state = [addNode(node1), addEdge(edge)].reduce(reducers, undefined);
+      expect(state).toEqual({
+        nodes: { [node1.id]: fillNode(node1) },
+        edges: {}
+      });
+    })
+    it('should not add the edge when the edge already exists', () => {
+      const anotherEdge = Object.assign({}, edge, { data: 'new edge with same id' });
+      const state = reducers(updatedState, addEdge(anotherEdge));
+      expect(updatedState.edges[edge.id]).toEqual(fillEdge(edge));
+      expect(updatedState.nodes[node1.id].outgoing)
+        .toEqual(expect.arrayContaining([edge.id]));
+      expect(updatedState.nodes[node2.id].incoming)
+        .toEqual(expect.arrayContaining([edge.id]));
+    })
+  });
 });

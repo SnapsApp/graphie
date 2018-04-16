@@ -24,6 +24,16 @@ const nodeData = (data = {}, action) => {
   }
 }
 
+const insertEdge = (node, direction, id) => Object.assign({}, node,
+  { [direction]: node[direction].concat(id) }
+);
+const deleteEdge = (node, direction, id) => {
+  const newList = node[direction].slice();
+  newList.splice(newList.indexOf(id));
+
+  return Object.assign({}, node, { [direction]: newList });
+}
+
 const nodes = (state = {}, action) => {
   switch (action.type) {
     case Atype.ADD_NODE: {
@@ -42,6 +52,24 @@ const nodes = (state = {}, action) => {
       delete nState[action.id];
       return nState;
     }
+    case Atype.ADD_EDGE: {
+      const { origin, destin, id } = action;
+      const originNode = state[origin];
+      const destinNode = state[destin];
+      return Object.assign({}, state, {
+        [origin]: insertEdge(originNode, 'outgoing', id),
+        [destin]: insertEdge(destinNode, 'incoming', id),
+      })
+    }
+    // case Atype.DELETE_EDGE: {
+    //   const { origin, destin, id } = action;
+    //   const originNode = state[origin];
+    //   const destinNode = state[destin];
+    //   return Object.assign({}, state, {
+    //     [origin]: deleteEdge(originNode, 'origin', id),
+    //     [destin]: deleteEdge(destinNode, 'destin', id),
+    //   })
+    // }
     default: return state;
   }
 }
@@ -79,6 +107,13 @@ const edges = (state = {}, action) => {
 
 export default function (state = {}, action) {
   // pack data from state onto actions here.
+  switch (action.type) {
+    case Atype.ADD_EDGE: {
+      const { origin, destin, id } = action;
+      const { nodes = {}, edge = {} } = state;
+      if (edges[id] || !nodes[origin] || !nodes[destin]) return state;
+    }
+  }
   return {
     nodes: nodes(state.nodes, action),
     edges: edges(state.edges, action),
