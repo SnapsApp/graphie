@@ -35,7 +35,13 @@ export const testNodes = [
 
 export const testEdges = [
   (origin, destin) => ({
-    id: 'asdflk',
+    id: 'edge123',
+    data: { relationship: 'complicated' },
+    origin,
+    destin
+  }),
+  (origin, destin) => ({
+    id: 'edge098',
     data: { relationship: 'complicated' },
     origin,
     destin

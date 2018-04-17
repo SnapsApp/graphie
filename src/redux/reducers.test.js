@@ -102,7 +102,7 @@ describe('graph actions and reducer', () => {
     const EMPTY_STATE = { nodes: {}, edges: {} };
 
     it('should not add the edge when none of the nodes exist', () => {
-      const state = [{}, addEdge(edge)].reduce(reducers, undefined);
+      const state = [addEdge(edge)].reduce(reducers, undefined);
       expect(state).toEqual(EMPTY_STATE);
     })
     it('should not add the edge when one of the nodes doesn\'t exist', () => {
@@ -112,7 +112,7 @@ describe('graph actions and reducer', () => {
         edges: {}
       });
     })
-    it('should not add the edge when the edge already exists', () => {
+    it('should not add the edge when an edge with the same id already exists', () => {
       const anotherEdge = Object.assign({}, edge, { data: 'new edge with same id' });
       const state = reducers(updatedState, addEdge(anotherEdge));
       expect(updatedState.edges[edge.id]).toEqual(fillEdge(edge));
@@ -121,5 +121,38 @@ describe('graph actions and reducer', () => {
       expect(updatedState.nodes[node2.id].incoming)
         .toEqual(expect.arrayContaining([edge.id]));
     })
+  });
+  describe('deleting edges', () => {
+    const node1 = testNodes[0];
+    const node2 = testNodes[1];
+    const node3 = testNodes[2];
+
+    const edge = testEdges[0](node1.id, node2.id);
+    const edge2 = testEdges[1](node1.id, node3.id);
+
+    const { addNode, addEdge, deleteEdge } = Action;
+
+    const actions = [node1, node2, node3].map(addNode)
+    const populatedState = actions.reduce(reducers, undefined);
+
+    it('should remove the edge from the edges branch', () => {
+      const postRemove = [addEdge(edge), deleteEdge(edge)]
+        .reduce(reducers, populatedState);
+      expect(Object.keys(postRemove.edges)).toEqual([]);
+    });
+    it('should remove edge from its nodes incoming and outgoing', () => {
+      const postRemove = [addEdge(edge), deleteEdge(edge)]
+        .reduce(reducers, populatedState);
+      expect(postRemove.nodes[node1.id].outgoing).toEqual(fillNode(node1).outgoing);
+      expect(postRemove.nodes[node2.id].incoming).toEqual(fillNode(node2).incoming);
+    });
+    it('should not delete anything else', () => {
+      const postRemove = [addEdge(edge), addEdge(edge2), deleteEdge(edge)]
+        .reduce(reducers, populatedState);
+
+      const stateWithoutEdge = reducers(populatedState, addEdge(edge2));
+      expect(postRemove).toEqual(stateWithoutEdge);
+    });
+    it('should not delete anything if edge does not exist', () => {});
   });
 });

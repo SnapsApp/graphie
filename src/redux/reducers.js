@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 import { Atype } from './actions';
 
+const INIT_STATE = { nodes: {}, edges: {} };
+
 const initNode = (
   id = undefined,
   data = {},
@@ -29,7 +31,7 @@ const insertEdge = (node, direction, id) => Object.assign({}, node,
 );
 const deleteEdge = (node, direction, id) => {
   const newList = node[direction].slice();
-  newList.splice(newList.indexOf(id));
+  newList.splice(newList.indexOf(id), 1);
 
   return Object.assign({}, node, { [direction]: newList });
 }
@@ -39,6 +41,7 @@ const nodes = (state = {}, action) => {
     case Atype.ADD_NODE: {
       const { id, data, incoming, outgoing } = action;
       const node = initNode(id, data, incoming, outgoing);
+
       return Object.assign({}, state, { [id]: node });
     }
     case Atype.UPDATE_NODE: {
@@ -61,15 +64,15 @@ const nodes = (state = {}, action) => {
         [destin]: insertEdge(destinNode, 'incoming', id),
       })
     }
-    // case Atype.DELETE_EDGE: {
-    //   const { origin, destin, id } = action;
-    //   const originNode = state[origin];
-    //   const destinNode = state[destin];
-    //   return Object.assign({}, state, {
-    //     [origin]: deleteEdge(originNode, 'origin', id),
-    //     [destin]: deleteEdge(destinNode, 'destin', id),
-    //   })
-    // }
+    case Atype.DELETE_EDGE: {
+      const { origin, destin, id } = action;
+      const originNode = state[origin];
+      const destinNode = state[destin];
+      return Object.assign({}, state, {
+        [origin]: deleteEdge(originNode, 'outgoing', id),
+        [destin]: deleteEdge(destinNode, 'incoming', id),
+      })
+    }
     default: return state;
   }
 }
@@ -88,6 +91,7 @@ const edges = (state = {}, action) => {
     case Atype.ADD_EDGE: {
       const { id, data, origin, destin } = action;
       const edge = initEdge(id, data, origin, destin);
+
       return Object.assign({}, state, { [id]: edge });
     }
     case Atype.UPDATE_EDGE: {
@@ -105,17 +109,25 @@ const edges = (state = {}, action) => {
   }
 }
 
-export default function (state = {}, action) {
+export default function (state = INIT_STATE, action) {
   // pack data from state onto actions here.
+
+  let packOntoAction = {};
+
   switch (action.type) {
     case Atype.ADD_EDGE: {
       const { origin, destin, id } = action;
       const { nodes = {}, edge = {} } = state;
+
       if (edges[id] || !nodes[origin] || !nodes[destin]) return state;
+    }
+    case Atype.DELETE_EDGE: {
+      const edge = state.edges[action.id];
+      if (edge) packOntoAction = edge;
     }
   }
   return {
-    nodes: nodes(state.nodes, action),
-    edges: edges(state.edges, action),
+    nodes: nodes(state.nodes, Object.assign({}, action, packOntoAction)),
+    edges: edges(state.edges, Object.assign({}, action, packOntoAction)),
   }
 }
