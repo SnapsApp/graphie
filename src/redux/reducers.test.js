@@ -155,4 +155,31 @@ describe('graph actions and reducer', () => {
     });
     it('should not delete anything if edge does not exist', () => {});
   });
+  describe('updating edges', () => {
+    const { addNode, addEdge, updateEdge } = Action;
+
+    const node1 = testNodes[0];
+    const node2 = testNodes[1];
+
+    const edge = testEdges[0](node1.id, node2.id);
+
+    const populatedState = [addNode(node1), addNode(node2)]
+      .reduce(reducers, undefined);
+
+    const stateWithEdges =
+    it('should update edges', () => {
+      const newData = {
+        id: edge.id,
+        data: { mytestdata: 'hello' }
+      };
+      const edgeWithUpdate = Object.assign({}, edge, newData);
+
+      const edgeUpdate = [addEdge(edge), updateEdge(newData)]
+        .reduce(reducers, populatedState);
+
+      const builtFromScratch = reducers(populatedState, addEdge(edgeWithUpdate));
+
+      expect(edgeUpdate).toEqual(builtFromScratch);
+    })
+  })
 });

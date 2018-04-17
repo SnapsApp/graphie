@@ -17,10 +17,14 @@ const initEdge = (
   destin = undefined
 ) => ({ id, data, origin, destin });
 
-const nodeData = (data = {}, action) => {
+/* NOTE: placeholder. replace with pluggable data reducers */
+const dataUpdaterPlaceholder = (data = {}, action) => {
   switch (action.type) {
     case Atype.UPDATE_NODE: {
-      return action.data; // NOTE: placeholder
+      return action.data;
+    }
+    case Atype.UPDATE_EDGE: {
+      return action.data;
     }
     default: return data;
   }
@@ -47,7 +51,7 @@ const nodes = (state = {}, action) => {
     case Atype.UPDATE_NODE: {
       const { id, data } = action;
       let node = state[id];
-      if (node) node = Object.assign({}, node, { data: nodeData(node.data, action) });
+      if (node) node = Object.assign({}, node, { data: dataUpdaterPlaceholder(node.data, action) });
       return Object.assign({}, state, { [id]: node });
     }
     case Atype.DELETE_NODE: {
@@ -77,15 +81,6 @@ const nodes = (state = {}, action) => {
   }
 }
 
-const edgeData = (data = {}, action) => {
-  switch (action.type) {
-    case Atype.UPDATE_EDGE: {
-      return action.data; // NOTE: placeholder
-    }
-    default: return data;
-  }
-}
-
 const edges = (state = {}, action) => {
   switch (action.type) {
     case Atype.ADD_EDGE: {
@@ -97,7 +92,7 @@ const edges = (state = {}, action) => {
     case Atype.UPDATE_EDGE: {
       const { id, data } = action;
       let edge = state[id];
-      if (edge) edge = Object.assign({}, edge, { data: edgeData(edge.data, action) });
+      if (edge) edge = Object.assign({}, edge, { data: dataUpdaterPlaceholder(edge.data, action) });
       return Object.assign({}, state, { [id]: edge});
     }
     case Atype.DELETE_EDGE: {
@@ -111,7 +106,6 @@ const edges = (state = {}, action) => {
 
 export default function (state = INIT_STATE, action) {
   // pack data from state onto actions here.
-
   let packOntoAction = {};
 
   switch (action.type) {
