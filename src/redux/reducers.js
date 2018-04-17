@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { Atype } from './actions';
+import Action, { Atype } from './actions';
 
 const INIT_STATE = { nodes: {}, edges: {} };
 
@@ -33,7 +33,7 @@ const dataUpdaterPlaceholder = (data = {}, action) => {
 const insertEdge = (node, direction, id) => Object.assign({}, node,
   { [direction]: node[direction].concat(id) }
 );
-const deleteEdge = (node, direction, id) => {
+const spliceEdge = (node, direction, id) => {
   const newList = node[direction].slice();
   newList.splice(newList.indexOf(id), 1);
 
@@ -54,7 +54,7 @@ const nodes = (state = {}, action) => {
       if (node) node = Object.assign({}, node, { data: dataUpdaterPlaceholder(node.data, action) });
       return Object.assign({}, state, { [id]: node });
     }
-    case Atype.DELETE_NODE: {
+    case Atype.CLEAR_NODE: {
       const nState = Object.assign({}, state);
       delete nState[action.id];
       return nState;
@@ -73,8 +73,8 @@ const nodes = (state = {}, action) => {
       const originNode = state[origin];
       const destinNode = state[destin];
       return Object.assign({}, state, {
-        [origin]: deleteEdge(originNode, 'outgoing', id),
-        [destin]: deleteEdge(destinNode, 'incoming', id),
+        [origin]: spliceEdge(originNode, 'outgoing', id),
+        [destin]: spliceEdge(destinNode, 'incoming', id),
       })
     }
     default: return state;
@@ -104,7 +104,7 @@ const edges = (state = {}, action) => {
   }
 }
 
-export default function (state = INIT_STATE, action) {
+function graphreducer(state = INIT_STATE, action) {
   // pack data from state onto actions here.
   let packOntoAction = {};
 
@@ -114,10 +114,26 @@ export default function (state = INIT_STATE, action) {
       const { nodes = {}, edge = {} } = state;
 
       if (edges[id] || !nodes[origin] || !nodes[destin]) return state;
+      break;
     }
     case Atype.DELETE_EDGE: {
       const edge = state.edges[action.id];
       if (edge) packOntoAction = edge;
+      break;
+    }
+    case Atype.DELETE_NODE: {
+      const node = state.nodes[action.id];
+      if (node) {
+        const { outgoing, incoming } = node;
+        const deleteEdgesThenNode = outgoing.concat(incoming)
+          .map(id => Action.deleteEdge(state.edges[id]))
+          .concat(Action.clearNode(node));
+
+        return deleteEdgesThenNode
+          .reduce((state, action) => {
+            return graphreducer(state, action)
+          }, state);
+      }
     }
   }
   return {
@@ -125,3 +141,5 @@ export default function (state = INIT_STATE, action) {
     edges: edges(state.edges, Object.assign({}, action, packOntoAction)),
   }
 }
+
+export default graphreducer;

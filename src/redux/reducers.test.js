@@ -66,20 +66,38 @@ describe('graph actions and reducer', () => {
       edges: {}
     })
   });
-  it(`should handle ${ Atype.DELETE_NODE }`, () => {
+  describe('deleting nodes', () => {
     const node = testNodes[0];
     const node2 = testNodes[1];
-    const { addNode, deleteNode } = Action;
+    const { addNode, deleteNode, addEdge } = Action;
 
-    const actions = [addNode(node), addNode(node2), deleteNode(node)];
+    const edge = testEdges[0](node.id, node2.id);
 
-    expect(actions.reduce(reducers, undefined)).toEqual({
-      nodes: {
-        [node2.id]: fillNode(node2)
-      },
-      edges: {}
-    })
-  });
+    const populatedState = [addNode(node), addNode(node2)]
+      .reduce(reducers, undefined);
+
+    it('should delete node from the nodes branch', () => {
+
+      const postDelete = reducers(populatedState, deleteNode(node));
+
+      expect(postDelete).toEqual({
+        nodes: {
+          [node2.id]: fillNode(node2)
+        },
+        edges: {}
+      })
+    });
+    it('should delete edges that belong to the node', () => {
+      const postDelete = [addEdge(edge), deleteNode(node)]
+        .reduce(reducers, populatedState);
+      expect(postDelete).toEqual({
+        nodes: {
+          [node2.id]: fillNode(node2)
+        },
+        edges: {}
+      });
+    });
+  })
   describe('adding edges', () => {
     const node1 = testNodes[0];
     const node2 = testNodes[1];
