@@ -1,4 +1,4 @@
-import reducers from './reducers';
+import reducers from './graphreducer';
 import Action, { Atype } from './actions';
 import expect from 'expect';
 import { testNodes, testEdges, INIT_NODE, INIT_EDGE } from './test/common';
