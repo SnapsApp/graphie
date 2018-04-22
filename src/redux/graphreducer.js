@@ -2,8 +2,10 @@ import Action, { Atype } from './actions';
 
 const INIT_STATE = { nodes: {}, edges: {} };
 
-const OUTGOING = 'outgoing';
-const INCOMING = 'incoming';
+export const edgeDirection = {
+  OUTGOING: 'outgoing',
+  INCOMING: 'incoming',
+}
 
 const initNode = (
   id = undefined,
@@ -78,8 +80,8 @@ const nodesReducerFactory = (
       const originNode = state[origin];
       const destinNode = state[destin];
 
-      const edgeFrom = Object.assign({}, action, { direction: OUTGOING });
-      const edgeTo = Object.assign({}, action, { direction: INCOMING });
+      const edgeFrom = Object.assign({}, action, { direction: edgeDirection.OUTGOING });
+      const edgeTo = Object.assign({}, action, { direction: edgeDirection.INCOMING });
 
       const outgoing = edgeListReducer(originNode.outgoing, edgeFrom);
       const incoming = edgeListReducer(destinNode.incoming, edgeTo);
