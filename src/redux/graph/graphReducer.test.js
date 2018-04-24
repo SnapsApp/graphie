@@ -1,5 +1,5 @@
 import graphReducer, { graphReducerFactory, nodesReducerFactory } from './graphReducer';
-import Action, { Atype } from './graphActions';
+import Action from './graphActions';
 import expect from 'expect';
 import { testNodes, testEdges, INIT_NODE, INIT_EDGE, fillNode, fillEdge, DEFAULT_NODE_TYPE } from './test/common';
 
@@ -17,7 +17,7 @@ describe('graph actions and reducer', () => {
       edges: {}
     })
   });
-  it(`should handle ${ Atype.ADD_NODE }`, () => {
+  it('should handle adding a node', () => {
     const node = testNodes[0];
     const addNode = Action.addNode(node);
     const expectedNode = fillNode(node);
@@ -42,7 +42,7 @@ describe('graph actions and reducer', () => {
       edges: {}
     })
   });
-  it(`should handle ${ Atype.UPDATE_NODE }`, () => {
+  it('should handle updating a node', () => {
     const node = testNodes[0]
 
     const updatedData = { byebye: 'baby' };

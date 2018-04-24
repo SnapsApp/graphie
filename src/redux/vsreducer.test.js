@@ -60,15 +60,4 @@ describe('vs reducer', () => {
       }
     });
   });
-  it('should be able to split child and parent nodes based on their services', () => {
-
-  })
-})
-
-describe('vs context', () => {
-  it('should properly parse fetched data');
-})
-
-describe('vs entity', () => {
-  it('should properly parse update data');
 })
