@@ -30,9 +30,12 @@ const updateNode = ({ id, data, nodeType }) => ({
   nodeType
 })
 
-const addEdge = edge => ({
+const addEdge = ({ id, data, origin, destin }) => ({
   type: ADD_EDGE,
-  ...edge
+  id,
+  data,
+  origin,
+  destin,
 });
 const updateEdge = ({ id, data }) => ({
   type: UPDATE_EDGE,
