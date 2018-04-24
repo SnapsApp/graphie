@@ -7,10 +7,13 @@ const ADD_EDGE = 'gp/add_edge';
 const UPDATE_EDGE = 'gp/update_edge';
 const DELETE_EDGE = 'gp/delete_edge';
 
-const addNode = node => ({
+const addNode = ({ id, data, nodeType, incoming, outgoing }) => ({
   type: ADD_NODE,
-  ...node,
-  nodeType: node.nodeType
+  id,
+  data,
+  incoming,
+  outgoing,
+  nodeType
 })
 const deleteNode = ({ id }) => ({
   type: DELETE_NODE,
