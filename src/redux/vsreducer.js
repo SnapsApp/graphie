@@ -16,11 +16,13 @@ const vsreducer = (state = {}, action) => {
       return newState
     }
     case vsAtype.ADD_VS: {
-      const { actions = [{}] } = action;
-      const newState = actions.reduce(graphReducer, undefined);
+      const { actions = [{}], rootId } = action;
+      const newState = actions.reduce(graphReducer, state[vsId]);
+      newState.rootId = rootId;
       return Object.assign({}, state, { [vsId]: newState });
     }
     case vsAtype.SET_ROOT: {
+      console.log('seeting root', action)
       const { vsId, rootId } = action;
       const newVS = Object.assign({}, state[vsId], { rootId });
       return Object.assign({}, state, { [vsId]: newVS });

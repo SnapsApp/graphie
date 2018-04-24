@@ -3,6 +3,7 @@ import Action from './vsActions';
 import expect from 'expect';
 
 import { testNodes, fillNode } from './graph/test/common';
+import testResponse from '../vs/testData'
 
 describe('vs reducer', () => {
   it('should initialize as an empty object', () => {
@@ -60,4 +61,12 @@ describe('vs reducer', () => {
       }
     });
   });
+  it('should be able to populate structure retrieved from virtualized endpoint', () => {
+    const vsId = 'test-vsid';
+    const populatedVS = vsReducer(undefined, Action.populateVS(vsId, testResponse));
+    const thisVS = populatedVS[vsId];
+    expect(Object.keys(thisVS.nodes).length).toEqual(20);
+    expect(Object.keys(thisVS.edges).length).toEqual(19);
+    expect(thisVS.rootId).toBeDefined();
+  })
 })

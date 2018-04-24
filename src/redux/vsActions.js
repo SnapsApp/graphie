@@ -1,13 +1,15 @@
 import gActions from './graph/graphActions';
+import { parseVSdata } from '../vs/common';
 
 const ADD_VS = 'vs/add_vs';
 const CLEAR_VS = 'vs/clear_vs';
 const SET_ROOT = 'vs/set_root';
 
-const addVS = (vsId, actions) => ({
+const addVS = (vsId, actions, rootId) => ({
   type: ADD_VS,
   vsId,
-  actions
+  actions,
+  rootId
 });
 const clearVS = vsId => ({
   type: CLEAR_VS,
@@ -29,8 +31,22 @@ const graphActionFactories = Object.keys(gActions).reduce((actions, name) => {
   return actions;
 }, {});
 
+const graph = graphActionFactories;
+const populateVS = (vsId, response) => {
+  const { nodes, edges, rootId } = parseVSdata(response);
+  const actions = Object.keys(nodes)
+    .map(id => graph.addNode(vsId)(nodes[id]))
+    .concat(
+      Object.keys(edges)
+        .map(id => graph.addEdge(vsId)(edges[id]))
+    )
+
+  return addVS(vsId, actions, rootId);
+}
+
 const Action = {
   addVS,
+  populateVS,
   clearVS,
   setRoot,
   ...graphActionFactories
