@@ -1,4 +1,4 @@
-export default {
+export const testResponse = {
     "analyticspages": {
         "data": [{ "displayIcon": "ion-ionic", "name": "Overview", "links": { "analyticspagesections": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "analyticspages": [] }, "createdAt": "2017-09-19T22:50:30.844Z", "updatedAt": "2018-04-16T22:01:25.603Z", "clonedNodes": ["59ea840f2ce566334fcd15b6", "59ea847f05e7004800610585"], "active": true, "id": "59c19f324ca8fc015b183339", "apiStatus": "200", "apiMessage": "OK", "entityType": "analyticspages", "href": "https://snapsmedia.io/api/analyticspages/59c19f324ca8fc015b183339", "edges": { "analyticspagesections": { "edges": { "59c2cd714d834683e2ed71fe": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cd714d834683e2ed71fe", "orderIndex": 0 }, "59c2cd8a4d834683e2ed71ff": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cd8a4d834683e2ed71ff", "orderIndex": 2 }, "59c2cdb04d834683e2ed7200": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cdb04d834683e2ed7200", "orderIndex": 4 } }, "maps": { "parentService": { "59c2cd714d834683e2ed71fe": "analyticspages", "59c2cd8a4d834683e2ed71ff": "analyticspages", "59c2cdb04d834683e2ed7200": "analyticspages" }, "parentId": { "59c2cd714d834683e2ed71fe": "59c19f324ca8fc015b183339", "59c2cd8a4d834683e2ed71ff": "59c19f324ca8fc015b183339", "59c2cdb04d834683e2ed7200": "59c19f324ca8fc015b183339" }, "childService": { "59c2cd714d834683e2ed71fe": "analyticspagesections", "59c2cd8a4d834683e2ed71ff": "analyticspagesections", "59c2cdb04d834683e2ed7200": "analyticspagesections" }, "childId": { "59c2cd714d834683e2ed71fe": "59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff": "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200": "59c2cdb04d834683e2ed7200" }, "orderIndex": { "59c2cd714d834683e2ed71fe": 0, "59c2cd8a4d834683e2ed71ff": 2, "59c2cdb04d834683e2ed7200": 4 }, "relation": { "59c2cd714d834683e2ed71fe": "object", "59c2cd8a4d834683e2ed71ff": "object", "59c2cdb04d834683e2ed7200": "object" } }, "indexes": { "parentService": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "parentId": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "childService": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "childId": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "orderIndex": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "relation": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"] } } } }],
         "analyticspagesections": {
@@ -12,3 +12,75 @@ export default {
         }
     }
 }
+
+export const parseVSdata = structure => {
+  const getServiceData = (service, layer = {}) => {
+    const layerEntities = (layer.data || []).reduce((map, e) => {
+      map[e.id] = {
+      id: e.id,
+      data: e,
+      nodeType: service
+      };
+      return map;
+    }, {});
+
+    return Object.assign({}, layerEntities, Object.keys(layer)
+      .filter(service => service !== 'data')
+      .reduce((map, s) => {
+        map = Object.assign({}, getServiceData(s, layer[s]));
+        return map;
+      }, {})
+    )
+  }
+
+
+  const getEdgeId = (a, b) => [a, b].sort().join('-');
+
+  const makeEdge = edge => {
+    const origin = edge.parentId;
+    const destin = edge.childId;
+
+    return ({
+      id: getEdgeId(origin, destin),
+      data: edge,
+      origin,
+      destin,
+    });
+  }
+
+  // entity.edges[service].edge[id] <-- get every obj for every combo of service
+  const getEdges = (entity, nodes) => {
+    const services = Object.keys(entity.edges);
+    const edgeData = services.reduce((dataArr, s) => {
+      const ids = Object.keys(entity.edges[s].edges);
+      return ids.map(id => entity.edges[s].edges[id]).concat(dataArr);
+    }, []);
+    return edgeData.map(makeEdge).reduce((map, e) => Object.assign(map, { [e.id]: e }), {});
+  }
+
+  const getStructureEdges = (service, layer, nodes) => {
+    const layerEdges = (layer.data || []).reduce((map, entity) =>
+      Object.assign(map, getEdges(entity, nodes))
+    , {});
+
+    return Object.assign({}, layerEdges, Object.keys(layer)
+      .filter(service => service !== 'data')
+      .reduce((map, s) => {
+        map = Object.assign({}, getStructureEdges(s, layer[s], nodes));
+        return map;
+      }, {})
+    )
+  }
+
+  const rootService = Object.keys(structure)[0];
+  const rootLayer = structure[rootService];
+  const rootId = rootLayer.data[0].id;
+
+  const nodes = getServiceData(rootService, rootLayer);
+  const edges = getStructureEdges(rootService, rootLayer, nodes);
+
+  return { nodes, edges, rootId };
+}
+
+
+

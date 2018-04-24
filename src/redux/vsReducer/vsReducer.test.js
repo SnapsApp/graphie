@@ -2,8 +2,8 @@ import vsReducer from './vsReducer';
 import Action from './vsActions';
 import expect from 'expect';
 
-import { testNodes, fillNode } from './graph/test/common';
-import testResponse from '../vs/testData'
+import { testNodes, fillNode } from '../graph/test/common';
+import { testResponse, parseVSdata } from './common'
 
 describe('vs reducer', () => {
   it('should initialize as an empty object', () => {
@@ -61,6 +61,15 @@ describe('vs reducer', () => {
       }
     });
   });
+
+  it('should properly parse fetched data', () => {
+    const { nodes, edges, rootId } = parseVSdata(testResponse);
+
+    expect(Object.keys(nodes).length).toEqual(20);
+    expect(rootId).toEqual("59c19f324ca8fc015b183339");
+    expect(Object.keys(edges).length).toEqual(19);
+  });
+
   it('should be able to populate structure retrieved from virtualized endpoint', () => {
     const vsId = 'test-vsid';
     const populatedVS = vsReducer(undefined, Action.populateVS(vsId, testResponse));

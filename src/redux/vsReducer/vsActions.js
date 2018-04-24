@@ -1,5 +1,5 @@
-import gActions from './graph/graphActions';
-import { parseVSdata } from '../vs/common';
+import gActions from '../graph/graphActions';
+import { parseVSdata } from './common';
 
 const ADD_VS = 'vs/add_vs';
 const CLEAR_VS = 'vs/clear_vs';

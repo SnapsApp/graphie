@@ -1,5 +1,5 @@
-import { graphReducerFactory, defaultEdgeListReducer, edgeDirection } from './graph/graphReducer';
-import { Atype as gAtype } from './graph/graphActions';
+import { graphReducerFactory, defaultEdgeListReducer, edgeDirection } from '../graph/graphReducer';
+import { Atype as gAtype } from '../graph/graphActions';
 import { Atype as vsAtype } from './vsActions';
 
 const graphReducer = graphReducerFactory();
