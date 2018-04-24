@@ -1,6 +1,8 @@
-import Action, { Atype } from './actions';
+import Action, { Atype } from './graphActions';
 
 const INIT_STATE = { nodes: {}, edges: {} };
+
+export const DEFAULT_NODE_TYPE = 'node';
 
 export const edgeDirection = {
   OUTGOING: 'outgoing',
@@ -10,9 +12,10 @@ export const edgeDirection = {
 const initNode = (
   id = undefined,
   data = {},
-  incoming = [],
-  outgoing = []
-) => ({ id, data, incoming, outgoing });
+  incoming = {},
+  outgoing = {},
+  nodeType = DEFAULT_NODE_TYPE
+) => ({ id, data, incoming, outgoing, nodeType });
 
 const initEdge = (
   id = undefined,
@@ -20,6 +23,12 @@ const initEdge = (
   origin = undefined,
   destin = undefined
 ) => ({ id, data, origin, destin });
+
+const allEdges = node => ['incoming', 'outgoing'].reduce((all, dir) => {
+  const edgesInDirection = Object.keys(node[dir]).reduce((list, nodeType) =>
+    list.concat(node[dir][nodeType]), []);
+  return all.concat(edgesInDirection);
+}, []);
 
 const defaultNodeDataReducer = (data, action) => {
   switch (action.type) {
@@ -48,25 +57,46 @@ const defaultEdgeListReducer = (edgeList = [], action) => {
       newList.splice(newList.indexOf(id), 1);
       return newList;
     }
-    default: return node
+    default: return edgeList
   }
 };
 
-const nodesReducerFactory = (
+const edgeListWithTypes = (map = {}, action) => {
+  switch (action.type) {
+    case Atype.ADD_EDGE:
+    case Atype.DELETE_EDGE: {
+      const { direction, outgoingType = DEFAULT_NODE_TYPE, incomingType = DEFAULT_NODE_TYPE } = action;
+      const nodeType = direction.OUTGOING ? outgoingType : incomingType;
+      const updatedEdgeType = defaultEdgeListReducer(map[nodeType], action);
+
+      const newMap = Object.assign({}, map);
+
+      if (updatedEdgeType.length) newMap[nodeType] = updatedEdgeType;
+      else delete newMap[nodeType];
+
+      return newMap;
+    }
+    default: return map
+  }
+}
+
+export const nodesReducerFactory = (
   dataReducer = defaultNodeDataReducer,
-  edgeListReducer = defaultEdgeListReducer
 ) => (state = {}, action) => {
   switch (action.type) {
     case Atype.ADD_NODE: {
-      const { id, data, incoming, outgoing } = action;
-      const node = initNode(id, data, incoming, outgoing);
+      const { id, data, incoming, outgoing, nodeType } = action;
+      const node = initNode(id, data, incoming, outgoing, nodeType);
 
       return Object.assign({}, state, { [id]: node });
     }
     case Atype.UPDATE_NODE: {
-      const { id, data } = action;
+      const { id, data, nodeType } = action;
       let node = state[id];
-      if (node) node = Object.assign({}, node, { data: dataReducer(node.data, action) });
+      if (node) node = Object.assign({}, node, {
+        data: dataReducer(node.data, action),
+        nodeType: nodeType || node.nodeType
+      });
       return Object.assign({}, state, { [id]: node });
     }
     case Atype.CLEAR_NODE: {
@@ -77,14 +107,18 @@ const nodesReducerFactory = (
     case Atype.ADD_EDGE:
     case Atype.DELETE_EDGE: {
       const { origin, destin, id } = action;
-      const originNode = state[origin];
-      const destinNode = state[destin];
+      const originNode = state[origin] || {};
+      const destinNode = state[destin] || {};
 
-      const edgeFrom = Object.assign({}, action, { direction: edgeDirection.OUTGOING });
-      const edgeTo = Object.assign({}, action, { direction: edgeDirection.INCOMING });
+      const outgoingType = originNode.nodeType;
+      const incomingType = destinNode.nodeType;
 
-      const outgoing = edgeListReducer(originNode.outgoing, edgeFrom);
-      const incoming = edgeListReducer(destinNode.incoming, edgeTo);
+      const packedAction = Object.assign({}, action, { outgoingType, incomingType });
+      const edgeFrom = Object.assign({}, packedAction, { direction: edgeDirection.OUTGOING });
+      const edgeTo = Object.assign({}, packedAction, { direction: edgeDirection.INCOMING });
+
+      const outgoing = edgeListWithTypes(originNode.outgoing, edgeFrom);
+      const incoming = edgeListWithTypes(destinNode.incoming, edgeTo);
 
       return Object.assign({}, state, {
         [origin]: Object.assign({}, originNode, { outgoing }),
@@ -95,7 +129,7 @@ const nodesReducerFactory = (
   }
 }
 
-const edgesReducerFactory = (dataReducer = defaultEdgeDataReducer) =>
+export const edgesReducerFactory = (dataReducer = defaultEdgeDataReducer) =>
   (state = {}, action) => {
     switch (action.type) {
       case Atype.ADD_EDGE: {
@@ -119,11 +153,12 @@ const edgesReducerFactory = (dataReducer = defaultEdgeDataReducer) =>
     }
   }
 
-export const graphReducerFactory = (nodeDataR, edgeListR, edgeDataR) => {
-  const nodes = nodesReducerFactory(nodeDataR, edgeListR);
-  const edges = edgesReducerFactory(edgeDataR);
-
-  return (state = INIT_STATE, action) => {
+// rewrite this to take in reducers... duh
+export const graphReducerFactory = (
+  nodes = nodesReducerFactory(),
+  edges = edgesReducerFactory()
+) => {
+  const graphreducer = (state = INIT_STATE, action) => {
     // pack data from state onto actions here.
     let packOntoAction = {};
 
@@ -144,7 +179,8 @@ export const graphReducerFactory = (nodeDataR, edgeListR, edgeDataR) => {
         const node = state.nodes[action.id];
         if (node) {
           const { outgoing, incoming } = node;
-          const deleteEdgesThenNode = outgoing.concat(incoming)
+
+          const deleteEdgesThenNode = allEdges(node)
             .map(id => Action.deleteEdge(state.edges[id]))
             .concat(Action.clearNode(node));
 
@@ -160,6 +196,7 @@ export const graphReducerFactory = (nodeDataR, edgeListR, edgeDataR) => {
       edges: edges(state.edges, Object.assign({}, action, packOntoAction)),
     }
   }
+  return graphreducer
 }
 
 const graphreducer = graphReducerFactory();

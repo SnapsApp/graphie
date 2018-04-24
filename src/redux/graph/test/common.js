@@ -1,8 +1,13 @@
+import { DEFAULT_NODE_TYPE } from '../graphReducer';
+
+export { DEFAULT_NODE_TYPE };
+
 export const INIT_NODE = {
   id: undefined,
   data: {},
-  incoming: [],
-  outgoing: [],
+  incoming: {},
+  outgoing: {},
+  nodeType: DEFAULT_NODE_TYPE
 }
 
 export const INIT_EDGE = {
@@ -11,6 +16,9 @@ export const INIT_EDGE = {
   origin: undefined,
   destin: undefined,
 }
+
+export const fillNode = node => Object.assign({}, INIT_NODE, node);
+export const fillEdge = edge => Object.assign({}, INIT_EDGE, edge);
 
 const nodeId = ['node123',  'node12',  'node234',  'node987',];
 
@@ -22,14 +30,22 @@ export const testNodes = [
   {
     id: nodeId[1],
     data: { helloWorld: 'asdfg' },
-    incoming: ['e1'],
-    outgoing: ['e1']
+    incoming: {
+      [DEFAULT_NODE_TYPE]: ['e1'],
+    },
+    outgoing: {
+      [DEFAULT_NODE_TYPE]: ['e1'],
+    }
   },
   {
     id: nodeId[2],
     data: { anotherNode: 'hello' },
-    outgoing: [],
-    incoming: ['asdf']
+    outgoing: {
+      [DEFAULT_NODE_TYPE]: [],
+    },
+    incoming: {
+      [DEFAULT_NODE_TYPE]: ['asdf'],
+    }
   }
 ]
 
