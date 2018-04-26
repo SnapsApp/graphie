@@ -1,6 +1,7 @@
+import expect from 'expect';
 import vsReducer from './vsReducer';
 import Action from './vsActions';
-import expect from 'expect';
+import { getLinkedNodes, find } from './vsGetters';
 
 import { testNodes, fillNode } from '../graph/test/common';
 import { testResponse, parseVSdata } from './common'
@@ -69,13 +70,51 @@ describe('vs reducer', () => {
     expect(rootId).toEqual("59c19f324ca8fc015b183339");
     expect(Object.keys(edges).length).toEqual(19);
   });
+})
 
+describe('vs reducer helpers', () => {
+  const vsId = 'test-vsid';
+  const populatedState = vsReducer(undefined, Action.populateVS(vsId, testResponse));
+  const thisVS = populatedState[vsId];
   it('should be able to populate structure retrieved from virtualized endpoint', () => {
-    const vsId = 'test-vsid';
-    const populatedVS = vsReducer(undefined, Action.populateVS(vsId, testResponse));
-    const thisVS = populatedVS[vsId];
     expect(Object.keys(thisVS.nodes).length).toEqual(20);
     expect(Object.keys(thisVS.edges).length).toEqual(19);
     expect(thisVS.rootId).toBeDefined();
+  });
+  it('should be able to get linked outgoing nodes', () => {
+    const nodeId = '59c19f324ca8fc015b183339';
+    const node = thisVS.nodes[nodeId];
+
+    const service = 'analyticspagesections';
+    const outgoingForOneService = getLinkedNodes(vsId)(populatedState, node, service);
+    const expectedIds = ['59c2cd714d834683e2ed71fe', '59c2cd8a4d834683e2ed71ff', '59c2cdb04d834683e2ed7200'];
+    expect(outgoingForOneService.map(({ id, nodeType }) => ({ id, nodeType})))
+      .toEqual(expectedIds.map(id => ({ id, nodeType: service })))
+
+    // TODO: pick more complicated test case
+    const outgoingForAll = getLinkedNodes(vsId)(populatedState, node);
+    const expectedIdsAll = ['59c2cd714d834683e2ed71fe', '59c2cd8a4d834683e2ed71ff', '59c2cdb04d834683e2ed7200'];
+    expect(outgoingForAll.map(({ id, nodeType }) => ({ id, nodeType})))
+      .toEqual(expectedIdsAll.map(id => ({ id, nodeType: service })))
+
+  });
+  it('should be able to traverse nodes', () => {
+    const pageSectionsQuery = {
+      analyticspagesections: {
+        _filter: entity => entity.active === true
+      }
+    };
+
+    const pageSections = find(vsId)(populatedState, pageSectionsQuery, thisVS.rootId);
+    expect(pageSections.length).toEqual(2);
+
+    const reportsQuery = {
+      analyticspagesections: {
+        _filter: (entity, edgeWithParent) => entity.active === true,
+        analyticsreports: {}
+      }
+    };
+    const reports = find(vsId)(populatedState, reportsQuery, thisVS.rootId);
+    expect(reports.length).toEqual(5);
   })
 })
