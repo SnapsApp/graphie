@@ -22,6 +22,25 @@ const setRoot = vsId => rootId => ({
   rootId
 })
 
+const initEntity = vsId => node => Object.assign(gActions.addNode(node),
+  { vsId, updateStatus: 'unchanged' });
+const updateEntity = vsId => node => Object.assign(gActions.updateNode(node),
+  { vsId, updateStatus: 'updated' });
+const addEntity = vsId => node => Object.assign(gActions.addNode(node),
+  { vsId, updateStatus: 'new' });
+const deleteEntity = vsId => node => Object.assign(gActions.deleteNode(node),
+  { vsId, updateStatus: 'deleted' });
+
+const initLink = vsId => edge => Object.assign(gActions.addEdge(edge),
+  { vsId, updateStatus: 'unchanged' });
+const updateLink = vsId => edge => Object.assign(gActions.updateEdge(edge),
+  { vsId, updateStatus: 'updated' });
+const link = vsId => edge => Object.assign(gActions.addEdge(edge),
+  { vsId, updateStatus: 'new' });
+const delink = vsId => edge => Object.assign(gActions.deleteEdge(edge),
+  { vsId, updateStatus: 'deleted' });
+
+
 const graphActionFactories = Object.keys(gActions).reduce((actions, name) => {
   actions[name] = vsId => (...args) => {
     const action = gActions[name](...args);
@@ -31,14 +50,15 @@ const graphActionFactories = Object.keys(gActions).reduce((actions, name) => {
   return actions;
 }, {});
 
-const graph = graphActionFactories;
-const populateVS = (vsId, response) => {
+export const populateVS = (vsId, response) => {
+  if (!response) return addVS(vsId);
+
   const { nodes, edges, rootId } = parseVSdata(response);
   const actions = Object.keys(nodes)
-    .map(id => graph.addNode(vsId)(nodes[id]))
+    .map(id => initEntity(vsId)(nodes[id]))
     .concat(
       Object.keys(edges)
-        .map(id => graph.addEdge(vsId)(edges[id]))
+        .map(id => initLink(vsId)(edges[id]))
     )
 
   return addVS(vsId, actions, rootId);
@@ -49,7 +69,16 @@ const Action = {
   populateVS,
   clearVS,
   setRoot,
-  ...graphActionFactories
+  // TODO: test
+  initEntity,
+  updateEntity,
+  addEntity,
+  deleteEntity,
+
+  initLink,
+  updateLink,
+  link,
+  delink
 };
 
 export const Atype = {

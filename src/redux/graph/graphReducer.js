@@ -153,7 +153,6 @@ export const edgesReducerFactory = (dataReducer = defaultEdgeDataReducer) =>
     }
   }
 
-// rewrite this to take in reducers... duh
 export const graphReducerFactory = (
   nodes = nodesReducerFactory(),
   edges = edgesReducerFactory()

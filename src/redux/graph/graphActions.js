@@ -13,7 +13,7 @@ const addNode = ({ id, data, nodeType, incoming, outgoing }) => ({
   data,
   incoming,
   outgoing,
-  nodeType
+  nodeType,
 })
 const deleteNode = ({ id }) => ({
   type: DELETE_NODE,

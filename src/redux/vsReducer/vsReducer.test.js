@@ -29,7 +29,7 @@ describe('vs reducer', () => {
   it('should be able to update a vsId with graph reducer actions', () => {
     const vsId = 'randId';
     const node = testNodes[0];
-    const populatedVS = [Action.addVS(vsId), Action.addNode(vsId)(node)].reduce(vsReducer, undefined);
+    const populatedVS = [Action.addVS(vsId), Action.initEntity(vsId)(node)].reduce(vsReducer, undefined);
     const expectedNode = fillNode(node);
 
     expect(populatedVS).toEqual({
@@ -47,7 +47,7 @@ describe('vs reducer', () => {
     const expectedNode = fillNode(node);
     const populatedVS = [
       Action.addVS(vsId),
-      Action.addNode(vsId)(node),
+      Action.initEntity(vsId)(node),
       Action.setRoot(vsId)(node.id)
     ].reduce(vsReducer, undefined);
 

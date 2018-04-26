@@ -13,14 +13,29 @@ export const testResponse = {
     }
 }
 
+export const makeNode = (entity, service) => ({
+  id: entity.id,
+  data: entity,
+  nodeType: service
+});
+export const getEdgeId = (a, b) => [a, b].sort().join('-');
+
+export const makeEdge = edge => {
+  const origin = edge.parentId;
+  const destin = edge.childId;
+
+  return ({
+    id: getEdgeId(origin, destin),
+    data: edge,
+    origin,
+    destin,
+  });
+}
+
 export const parseVSdata = structure => {
   const getServiceData = (service, layer = {}) => {
     const layerEntities = (layer.data || []).reduce((map, e) => {
-      map[e.id] = {
-      id: e.id,
-      data: e,
-      nodeType: service
-      };
+      map[e.id] = makeNode(e, service);
       return map;
     }, {});
 
@@ -31,21 +46,6 @@ export const parseVSdata = structure => {
         return map;
       }, {})
     )
-  }
-
-
-  const getEdgeId = (a, b) => [a, b].sort().join('-');
-
-  const makeEdge = edge => {
-    const origin = edge.parentId;
-    const destin = edge.childId;
-
-    return ({
-      id: getEdgeId(origin, destin),
-      data: edge,
-      origin,
-      destin,
-    });
   }
 
   // entity.edges[service].edge[id] <-- get every obj for every combo of service
