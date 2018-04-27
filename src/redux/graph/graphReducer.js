@@ -80,14 +80,15 @@ const edgeListWithTypes = (map = {}, action) => {
   }
 }
 
-export const nodesReducerFactory = (
+export const createNodesReducer = (
   dataReducer = defaultNodeDataReducer,
 ) => (state = {}, action) => {
   switch (action.type) {
     case Atype.ADD_NODE: {
       const { id, data, incoming, outgoing, nodeType } = action;
-      const node = initNode(id, data, incoming, outgoing, nodeType);
+      const initialData = dataReducer(data, action);
 
+      const node = initNode(id, initialData, incoming, outgoing, nodeType);
       return Object.assign({}, state, { [id]: node });
     }
     case Atype.UPDATE_NODE: {
@@ -129,13 +130,14 @@ export const nodesReducerFactory = (
   }
 }
 
-export const edgesReducerFactory = (dataReducer = defaultEdgeDataReducer) =>
+export const createEdgesReducer = (dataReducer = defaultEdgeDataReducer) =>
   (state = {}, action) => {
     switch (action.type) {
       case Atype.ADD_EDGE: {
         const { id, data, origin, destin } = action;
-        const edge = initEdge(id, data, origin, destin);
+        const initialData = dataReducer(data, action);
 
+        const edge = initEdge(id, initialData, origin, destin);
         return Object.assign({}, state, { [id]: edge });
       }
       case Atype.UPDATE_EDGE: {
@@ -153,9 +155,9 @@ export const edgesReducerFactory = (dataReducer = defaultEdgeDataReducer) =>
     }
   }
 
-export const graphReducerFactory = (
-  nodes = nodesReducerFactory(),
-  edges = edgesReducerFactory()
+export const createGraphReducer = (
+  nodes = createNodesReducer(),
+  edges = createEdgesReducer()
 ) => {
   const graphreducer = (state = INIT_STATE, action) => {
     // pack data from state onto actions here.
@@ -198,6 +200,6 @@ export const graphReducerFactory = (
   return graphreducer
 }
 
-const graphreducer = graphReducerFactory();
+const graphreducer = createGraphReducer();
 
 export default graphreducer;

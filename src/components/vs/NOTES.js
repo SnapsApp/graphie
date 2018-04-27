@@ -3,18 +3,10 @@ receive fetch -> connect to redux
 */
 
 /*
-  consst reportsForThisPage = props => {
-    {
-      analyticspages: {
-        _filter: entity => entity.id === props.pageId,
-        analyticsreports: {
-          _filter: (entity, edgeWithParent) => entity.retired === 'false',
-          _edgeToParent,
-          id,
-        }
-      }
-    }
-  }
+update =>
+*/
+
+/*
   @withRouter
   AnalyticsPage
   componentWillReceiveProps() {

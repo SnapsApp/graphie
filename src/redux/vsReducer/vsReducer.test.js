@@ -3,8 +3,7 @@ import vsReducer from './vsReducer';
 import Action from './vsActions';
 import { getLinkedNodes, find } from './vsGetters';
 
-import { testNodes, fillNode } from '../graph/test/common';
-import { testResponse, parseVSdata } from './common'
+import { testResponse, parseVSdata, testEntities, makeNode, expectNode } from './common'
 
 describe('vs reducer', () => {
   it('should initialize as an empty object', () => {
@@ -29,9 +28,10 @@ describe('vs reducer', () => {
   });
   it('should be able to update a vsId with graph reducer actions', () => {
     const vsId = 'randId';
-    const node = testNodes[0];
+    const entity = testEntities[0];
+    const node = makeNode(entity, entity.service);
     const populatedVS = [Action.addVS(vsId), Action.initEntity(vsId)(node)].reduce(vsReducer, undefined);
-    const expectedNode = fillNode(node);
+    const expectedNode = expectNode(entity, 'unchanged');
 
     expect(populatedVS).toEqual({
       [vsId]: {
@@ -44,8 +44,9 @@ describe('vs reducer', () => {
   });
   it('should be able to add root id to a vs', () => {
     const vsId = 'randId';
-    const node = testNodes[0];
-    const expectedNode = fillNode(node);
+    const entity = testEntities[0];
+    const node = makeNode(entity, entity.service);
+    const expectedNode = expectNode(entity, 'unchanged');
     const populatedVS = [
       Action.addVS(vsId),
       Action.initEntity(vsId)(node),

@@ -1,3 +1,5 @@
+import { nodeId, DEFAULT_NODE_TYPE, INIT_NODE } from '../graph/test/common';
+
 export const testResponse = {
     "analyticspages": {
         "data": [{ "displayIcon": "ion-ionic", "name": "Overview", "links": { "analyticspagesections": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "analyticspages": [] }, "createdAt": "2017-09-19T22:50:30.844Z", "updatedAt": "2018-04-16T22:01:25.603Z", "clonedNodes": ["59ea840f2ce566334fcd15b6", "59ea847f05e7004800610585"], "active": true, "id": "59c19f324ca8fc015b183339", "apiStatus": "200", "apiMessage": "OK", "entityType": "analyticspages", "href": "https://snapsmedia.io/api/analyticspages/59c19f324ca8fc015b183339", "edges": { "analyticspagesections": { "edges": { "59c2cd714d834683e2ed71fe": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cd714d834683e2ed71fe", "orderIndex": 0 }, "59c2cd8a4d834683e2ed71ff": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cd8a4d834683e2ed71ff", "orderIndex": 2 }, "59c2cdb04d834683e2ed7200": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cdb04d834683e2ed7200", "orderIndex": 4 } }, "maps": { "parentService": { "59c2cd714d834683e2ed71fe": "analyticspages", "59c2cd8a4d834683e2ed71ff": "analyticspages", "59c2cdb04d834683e2ed7200": "analyticspages" }, "parentId": { "59c2cd714d834683e2ed71fe": "59c19f324ca8fc015b183339", "59c2cd8a4d834683e2ed71ff": "59c19f324ca8fc015b183339", "59c2cdb04d834683e2ed7200": "59c19f324ca8fc015b183339" }, "childService": { "59c2cd714d834683e2ed71fe": "analyticspagesections", "59c2cd8a4d834683e2ed71ff": "analyticspagesections", "59c2cdb04d834683e2ed7200": "analyticspagesections" }, "childId": { "59c2cd714d834683e2ed71fe": "59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff": "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200": "59c2cdb04d834683e2ed7200" }, "orderIndex": { "59c2cd714d834683e2ed71fe": 0, "59c2cd8a4d834683e2ed71ff": 2, "59c2cdb04d834683e2ed7200": 4 }, "relation": { "59c2cd714d834683e2ed71fe": "object", "59c2cd8a4d834683e2ed71ff": "object", "59c2cdb04d834683e2ed7200": "object" } }, "indexes": { "parentService": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "parentId": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "childService": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "childId": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "orderIndex": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "relation": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"] } } } }],
@@ -82,5 +84,28 @@ export const parseVSdata = structure => {
   return { nodes, edges, rootId };
 }
 
+export const testEntities = [
+  {
+    id: nodeId[0],
+    helloWorld: 'hello',
+    service: 'banana'
+  },
+  {
+    id: nodeId[1],
+    helloWorld: 'asdfg',
+    service: 'elephant'
+  },
+  {
+    id: nodeId[2],
+    anotherEntity: 'hello',
+    service: 'ennui'
+  }
+]
 
-
+export const expectNode = (entity, updateStatus) =>
+  Object.assign({}, INIT_NODE, makeNode(entity, entity.service), {
+    data: {
+      entity,
+      updateStatus
+    }
+  });

@@ -5,9 +5,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
 import { mapEntity, mapEdge } from '../../redux/vsReducer/vsGetters';
+import { updateEntity } from '../../redux/vsReducer/vsActions';
 
 export const VS_ENTITY_PROPS = {
   id: PropTypes.string.isRequired,
@@ -15,6 +17,7 @@ export const VS_ENTITY_PROPS = {
 
   // mapped
   entity: PropTypes.object.isRequired,
+  apiUpdateEntity: PropTypes.func.isRequired,
   edgeToParent: PropTypes.object,
   ...VS_CONTEXT_PROPS
 }
@@ -22,6 +25,10 @@ export const VS_ENTITY_PROPS = {
 const mapStateToProps = (state, props) => ({
   entity: mapEntity(state, props),
   edgeToParent: mapEdge(state, props)
+})
+
+const mapDispatchToProps = (dispatch, props) => bindActionCreators({
+  apiUpdateEntity: updateEntity(props.vsId)
 })
 
 const vsEntity = Child => {
@@ -32,7 +39,7 @@ const vsEntity = Child => {
       return <Child { ...this.props } />
     }
   }
-  return vsConsumer(connect(mapStateToProps)(ConnectVsEntity));
+  return vsConsumer(connect(mapStateToProps, mapDispatchToProps)(ConnectVsEntity));
 }
 
 export default vsEntity;

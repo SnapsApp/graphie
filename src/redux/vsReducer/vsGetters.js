@@ -61,7 +61,7 @@ const _find = (layer, nodes, vs) => {
   if (!layer) return nodes;
 
   const { _filter = () => true } = layer;
-  const filteredNodes = nodes.filter(n => _filter(n.data));
+  const filteredNodes = nodes.filter(n => _filter(n.data.entity));
   const linkedServices = serviceKeys(layer);
 
   if (!linkedServices.length) return filteredNodes;
@@ -91,7 +91,7 @@ export const find = vsId => (state, query, fromId) => {
 export const getIds = vsId => (state, query) =>
   find(vsId)(state, query).map(n => n.id);
 
-export const mapEntity = (state, props) => state[props.vsId].nodes[props.id].data;
+export const mapEntity = (state, props) => state[props.vsId].nodes[props.id].data.entity;
 
 export const mapEdge = (state, props) => {
   const edgeId = [props.id, props.parentId].sort().join('-');

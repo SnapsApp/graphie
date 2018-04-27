@@ -1,11 +1,11 @@
-import graphReducer, { graphReducerFactory, nodesReducerFactory } from './graphReducer';
+import graphReducer, { createGraphReducer } from './graphReducer';
 import Action from './graphActions';
 import expect from 'expect';
 import { testNodes, testEdges, INIT_NODE, INIT_EDGE, fillNode, fillEdge, DEFAULT_NODE_TYPE } from './test/common';
 
 describe('graph actions and reducer', () => {
   it('should return a graph from graphReducerFactory', () => {
-    const greducer = graphReducerFactory();
+    const greducer = createGraphReducer();
     expect(greducer(undefined, {})).toEqual({
       nodes: {},
       edges: {}

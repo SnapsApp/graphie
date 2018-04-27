@@ -1,4 +1,4 @@
-import { graphReducerFactory, nodesReducerFactory, defaultEdgeListReducer, edgeDirection } from '../graph/graphReducer';
+import { createGraphReducer, createNodesReducer, defaultEdgeListReducer, edgeDirection } from '../graph/graphReducer';
 import { Atype as gAtype } from '../graph/graphActions';
 import { Atype as vsAtype } from './vsActions';
 
@@ -13,12 +13,18 @@ const INIT_EDGE_DATA = {
 
 const nodeDataReducer = (nData = INIT_NODE_DATA, action) => {
   switch (action.type) {
-    case gAtype.ADD_NODE:
-    case gAtype.UPDATE_NODE: {
-      const { data, meta } = action;
+    case gAtype.ADD_NODE: {
+      const { data, updateStatus } = action;
       return {
         entity: data,
-        updateStatus: meta.updateStatus || nData.updateStatus
+        updateStatus: updateStatus || nData.updateStatus
+      }
+    }
+    case gAtype.UPDATE_NODE: {
+      const { change, updateStatus } = action;
+      return {
+        entity: Object.assign({}, nData, change),
+        updateStatus: updateStatus || nData.updateStatus
       }
     }
     default: return nData;
@@ -38,8 +44,8 @@ const edgeDataReducer = (eData = INIT_EDGE_DATA, action) => {
   }
 }
 
-const nodesReducer = nodesReducerFactory(nodeDataReducer);
-const graphReducer = graphReducerFactory(nodesReducer);
+const nodesReducer = createNodesReducer(nodeDataReducer);
+const graphReducer = createGraphReducer(nodesReducer);
 
 const vsreducer = (state = {}, action) => {
   const { vsId } = action;

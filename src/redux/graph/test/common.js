@@ -20,7 +20,7 @@ export const INIT_EDGE = {
 export const fillNode = node => Object.assign({}, INIT_NODE, node);
 export const fillEdge = edge => Object.assign({}, INIT_EDGE, edge);
 
-const nodeId = ['node123',  'node12',  'node234',  'node987',];
+export const nodeId = ['node123',  'node12',  'node234',  'node987',];
 
 export const testNodes = [
   {

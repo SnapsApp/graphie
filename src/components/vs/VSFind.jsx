@@ -5,7 +5,7 @@ import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
 import { getIds } from '../../redux/vsReducer/vsGetters';
 
 const mapStateToProps = (state, props) => ({
-  results: getIds(props.vsContext.vsId)(state, props.query)
+  results: getIds(props.vsContext.vsId)(state, props.find)
 })
 
 const idsHaveChanged = (arr1, arr2) => {
@@ -14,10 +14,10 @@ const idsHaveChanged = (arr1, arr2) => {
   return a !== b;
 }
 
-class VSGet extends Component {
+class VSFind extends Component {
   static propTypes = {
     ...VS_CONTEXT_PROPS,
-    query: PropTypes.object.isRequired,
+    find: PropTypes.object.isRequired,
     results: PropTypes.array.isRequired
   }
 
@@ -29,4 +29,4 @@ class VSGet extends Component {
     return this.props.children({ results: this.props.results });
   }
 }
-export default vsConsumer(connect(mapStateToProps)(VSGet));
+export default vsConsumer(connect(mapStateToProps)(VSFind));

@@ -1,4 +1,4 @@
-import gActions from '../graph/graphActions';
+import gActions, { Atype as gAtype } from '../graph/graphActions';
 import { parseVSdata } from './common';
 
 const ADD_VS = 'vs/add_vs';
@@ -24,8 +24,16 @@ const setRoot = vsId => rootId => ({
 
 const initEntity = vsId => node => Object.assign(gActions.addNode(node),
   { vsId, updateStatus: 'unchanged' });
-const updateEntity = vsId => node => Object.assign(gActions.updateNode(node),
-  { vsId, updateStatus: 'updated' });
+
+export const updateEntity = vsId => ({ id, change }) => ({
+  type: gAtype.UPDATE_NODE,
+  vsId,
+  id,
+  change,
+  updateStatus: 'updated'
+})
+
+// TODO: test...
 const addEntity = vsId => node => Object.assign(gActions.addNode(node),
   { vsId, updateStatus: 'new' });
 const deleteEntity = vsId => node => Object.assign(gActions.deleteNode(node),
