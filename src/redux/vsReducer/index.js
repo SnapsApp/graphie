@@ -1,5 +1,5 @@
-import { createGraphReducer, createNodesReducer, defaultEdgeListReducer, edgeDirection } from '../graph/graphReducer';
-import { Atype as gAtype } from '../graph/graphActions';
+import { createGraphReducer, createNodesReducer, defaultEdgeListReducer, edgeDirection } from '../graphReducer';
+import { Atype as gAtype } from '../graphReducer/graphActions';
 import { Atype as vsAtype } from './vsActions';
 
 const INIT_NODE_DATA = {

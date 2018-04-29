@@ -1,4 +1,4 @@
-import gActions, { Atype as gAtype } from '../graph/graphActions';
+import gActions, { Atype as gAtype } from '../graphReducer/graphActions';
 import { parseVSdata } from './common';
 
 const ADD_VS = 'vs/add_vs';

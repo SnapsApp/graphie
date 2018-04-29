@@ -1,4 +1,4 @@
-import graphReducer, { createGraphReducer } from './graphReducer';
+import graphReducer, { createGraphReducer } from './index';
 import Action from './graphActions';
 import expect from 'expect';
 import { testNodes, testEdges, INIT_NODE, INIT_EDGE, fillNode, fillEdge, DEFAULT_NODE_TYPE } from './test/common';

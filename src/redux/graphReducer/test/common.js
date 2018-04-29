@@ -1,4 +1,4 @@
-import { DEFAULT_NODE_TYPE } from '../graphReducer';
+import { DEFAULT_NODE_TYPE } from '../index';
 
 export { DEFAULT_NODE_TYPE };
 

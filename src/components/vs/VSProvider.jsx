@@ -7,6 +7,7 @@ import VSContext from './VSContext';
 import { testResponse } from '../../redux/vsReducer/common';
 import { getVS } from '../../redux/vsReducer/vsGetters';
 import { populateVS } from '../../redux/vsReducer/vsActions';
+import { addToDataBranch } from '../../redux/dataReducer';
 
 export const VS_CONTEXT_PROPS = {
   vsContext: PropTypes.shape({
@@ -17,7 +18,8 @@ export const VS_CONTEXT_PROPS = {
 
 const mapStateToProps = (state, props) => ({ populated: getVS(props.id)(state) !== undefined });
 const mapDispatchToProps = dispatch => bindActionCreators({
-  apiPopulateVS: populateVS
+  apiPopulateVS: populateVS,
+  apiAddToDataBranch: addToDataBranch
 }, dispatch);
 
 class VSProvider extends Component {
@@ -62,6 +64,7 @@ class VSProvider extends Component {
   }
 
   parseAndSetResp(resp) {
+    this.props.apiAddToDataBranch(resp); // To mock snaps data branch
     this.props.apiPopulateVS(this.props.id, resp) // TODO
   }
 
