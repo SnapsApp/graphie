@@ -14,7 +14,7 @@ export const EdgeDir = {
   }
 }
 
-export const getVS = vsId => state => state[vsId];
+export const getVS = vsId => state => state.vs[vsId];
 
 export const getLinkedServiceNodes = (vs, fromNode, service, direction = OUTGOING) => {
   const otherNode = EdgeDir[direction].otherNode;
@@ -81,7 +81,7 @@ const _find = (layer, nodes, vs) => {
 }
 
 export const find = vsId => (state, query, fromId) => {
-  const vs = state[vsId];
+  const vs = getVS(vsId)(state);
   const startId = fromId || vs.rootId;
   const startNode = vs.nodes[startId];
 
@@ -91,9 +91,9 @@ export const find = vsId => (state, query, fromId) => {
 export const getIds = vsId => (state, query) =>
   find(vsId)(state, query).map(n => n.id);
 
-export const mapEntity = (state, props) => state[props.vsId].nodes[props.id].data.entity;
+export const mapEntity = (state, props) => getVS(props.vsId)(state).nodes[props.id].data.entity;
 
 export const mapEdge = (state, props) => {
   const edgeId = [props.id, props.parentId].sort().join('-');
-  return state[props.vsId].edges[edgeId];
+  return getVS(props.vsId)(state).edges[edgeId];
 }
