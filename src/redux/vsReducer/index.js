@@ -14,9 +14,9 @@ const INIT_EDGE_DATA = {
 const nodeDataReducer = (nData = INIT_NODE_DATA, action) => {
   switch (action.type) {
     case gAtype.ADD_NODE: {
-      const { data, updateStatus } = action;
+      const { updateStatus } = action;
       return {
-        entity: data,
+        entity: {},
         updateStatus: updateStatus || nData.updateStatus
       }
     }

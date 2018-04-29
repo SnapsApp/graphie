@@ -1,4 +1,9 @@
 /*
+map entity => vs + databranch
+map edge => vs + databranch
+*/
+
+/*
 receive fetch -> connect to redux
 */
 

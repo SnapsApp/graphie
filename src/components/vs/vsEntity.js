@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
-import { mapEntity, mapEdge } from '../../redux/vsReducer/vsGetters';
 import { updateEntity } from '../../redux/vsReducer/vsActions';
+import { mapEntity, mapEdge } from '../../redux/getters';
 
 export const VS_ENTITY_PROPS = {
   id: PropTypes.string.isRequired,

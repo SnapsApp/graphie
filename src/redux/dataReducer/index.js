@@ -1,4 +1,3 @@
-
 const ADD_ENTITY = 'data/add_entity';
 const REMOVE_ENTITY = 'data/remove_entity';
 const POPULATE_DATA_BRANCH = 'data/populate_data_branch';
@@ -33,7 +32,7 @@ function getEntitiesFromResponse(service, layer) {
 export const addToDataBranch = (response = {}) => {
   const service = Object.keys(response)[0];
   const entities = getEntitiesFromResponse(service, response[service]);
-  console.log('ENT', entities);
+
   return {
     type: POPULATE_DATA_BRANCH,
     actions: entities.map(({ service, entity }) => addEntity(service, entity))

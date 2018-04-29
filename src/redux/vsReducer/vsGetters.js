@@ -57,11 +57,11 @@ const toObjOfArrays = (map, key) => {
   return map;
 };
 
-const _find = (layer, nodes, vs) => {
+const _find = (layer, nodes, vs, data) => {
   if (!layer) return nodes;
 
   const { _filter = () => true } = layer;
-  const filteredNodes = nodes.filter(n => _filter(n.data.entity));
+  const filteredNodes = nodes.filter(n => _filter(data[n.nodeType][n.id]));
   const linkedServices = serviceKeys(layer);
 
   if (!linkedServices.length) return filteredNodes;
@@ -76,7 +76,7 @@ const _find = (layer, nodes, vs) => {
   })
 
   return [].concat.apply([],
-    linkedServices.map(s => _find(layer[s], childNodesMap[s], vs))
+    linkedServices.map(s => _find(layer[s], childNodesMap[s], vs, data))
   )
 }
 
@@ -85,15 +85,15 @@ export const find = vsId => (state, query, fromId) => {
   const startId = fromId || vs.rootId;
   const startNode = vs.nodes[startId];
 
-  return _find(query, [startNode], vs);
+  return _find(query, [startNode], vs, state.data);
 }
 
 export const getIds = vsId => (state, query) =>
   find(vsId)(state, query).map(n => n.id);
 
-export const mapEntity = (state, props) => getVS(props.vsId)(state).nodes[props.id].data.entity;
+export const getEntityState = (state, { vsId, id }) => getVS(vsId)(state).nodes[id];
 
-export const mapEdge = (state, props) => {
-  const edgeId = [props.id, props.parentId].sort().join('-');
-  return getVS(props.vsId)(state).edges[edgeId];
+export const getEdgeState = (state, { id, parentId, vsId }) => {
+  const edgeId = [id, parentId].sort().join('-');
+  return getVS(vsId)(state).edges[edgeId];
 }
