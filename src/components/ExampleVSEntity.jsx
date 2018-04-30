@@ -28,8 +28,8 @@ class ExampleVSEntity extends Component {
 
   update = e => {
     e.preventDefault();
-    console.log(e.target);
-    this.props.apiUpdateEntity()
+    // do any other preprocessing or data packing here
+    this.props.apiUpdateEntity(this.props[thisForm].values);
   }
   revert = () => {}
   delete = () => {}
@@ -68,7 +68,7 @@ class ExampleVSEntity extends Component {
                 />
               </label>
             </p>
-            <button>Save</button>
+            <button type="submit">Save</button>
             <button>Clear</button>
           </form>
           <button onClick={ this.revert }>Revert</button>

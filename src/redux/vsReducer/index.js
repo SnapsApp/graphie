@@ -23,7 +23,7 @@ const nodeDataReducer = (nData = INIT_NODE_DATA, action) => {
     case gAtype.UPDATE_NODE: {
       const { change, updateStatus } = action;
       return {
-        entity: Object.assign({}, nData, change),
+        entity: Object.assign({}, nData.entity, change),
         updateStatus: updateStatus || nData.updateStatus
       }
     }
@@ -73,7 +73,13 @@ const vsreducer = (state = {}, action) => {
     }
   }
 
-  return vs ? Object.assign({}, state, { [vsId]: graphReducer(state, packedAction) }) : state;
+  if (vs) {
+    const { nodes, edges } = graphReducer(vs, packedAction);
+    const { rootId } = vs;
+    return Object.assign({}, state, { [vsId]: { nodes, edges, rootId } });
+  }
+
+  return state;
 }
 
 export default vsreducer;

@@ -1,5 +1,16 @@
 /*
-<SomeVSEntity id="" parentId="" />
+wraps a component to give it entity data and updater functions
+use within a vs provider
+
+E.x. use:
+
+<VSProvider vsId="pekapeka">
+  <SUPERCOOLEntity id="necessary" parentId="required_for_edge_functions_to_work" />
+</VSProvider>
+
+where:
+
+SUPERCOOLEntity = vsEntity(SUPERCOOLEntityRendererOrFormOrWhatever)
 */
 
 import React, { Component } from 'react';
@@ -28,7 +39,7 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch, props) => bindActionCreators({
-  apiUpdateEntity: updateEntity(props.vsId, props.id)
+  apiUpdateEntity: updateEntity(props.vsContext.vsId, props.id)
 }, dispatch)
 
 const vsEntity = Child => {
