@@ -1,14 +1,11 @@
 /*
-map entity => vs + databranch
-map edge => vs + databranch
+update entity update
+
+update edge update
+
 */
 
 /*
-receive fetch -> connect to redux
-*/
-
-/*
-update =>
 */
 
 /*

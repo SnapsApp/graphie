@@ -9,6 +9,12 @@ import { getVS } from '../../redux/vsReducer/vsGetters';
 import { populateVS } from '../../redux/vsReducer/vsActions';
 import { addToDataBranch } from '../../redux/dataReducer';
 
+
+const testStyle = {
+  padding: '10px',
+  background: 'lightblue'
+}
+
 export const VS_CONTEXT_PROPS = {
   vsContext: PropTypes.shape({
     vsId: PropTypes.string.isRequired,
@@ -16,7 +22,7 @@ export const VS_CONTEXT_PROPS = {
   })
 }
 
-const mapStateToProps = (state, props) => ({ populated: getVS(props.id)(state) !== undefined });
+const mapStateToProps = (state, props) => ({ populated: getVS(state, props) !== undefined });
 const mapDispatchToProps = dispatch => bindActionCreators({
   apiPopulateVS: populateVS,
   apiAddToDataBranch: addToDataBranch
@@ -27,11 +33,11 @@ class VSProvider extends Component {
     structure: PropTypes.object.isRequired,
     apiPopulateVS: PropTypes.func.isRequired,
     rootId: PropTypes.string,
-    id: PropTypes.string,
+    vsId: PropTypes.string,
   };
 
   static defaultProps = {
-    id: 'generaterandomidhere' // TODO
+    vsId: 'generaterandomidhere' // TODO
   }
 
   state = {
@@ -43,21 +49,21 @@ class VSProvider extends Component {
 
   componentDidMount() {
     if (this.props.rootId) this.fetchData(this.props.structure)();
-    else this.props.apiPopulateVS(this.props.id);
+    else this.props.apiPopulateVS(this.props.vsId);
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (!this.props.populated && nextProps.populated) {
-      this.readyVSContext(nextProps, nextState);
+      this.readyVSContext(nextProps);
     }
   }
 
-  readyVSContext() {
+  readyVSContext(props) {
     this.setState({
       // vsContext: {} <-- ready vsContext here
       vsContext: {
-        vsId: this.props.id,
-        fetchData: this.fetchData(this.props.structure)
+        vsId: props.vsId,
+        fetchData: this.fetchData(props.structure)
       },
       ready: true
     });
@@ -65,7 +71,7 @@ class VSProvider extends Component {
 
   parseAndSetResp(resp) {
     this.props.apiAddToDataBranch(resp); // To mock snaps data branch
-    this.props.apiPopulateVS(this.props.id, resp) // TODO
+    this.props.apiPopulateVS(this.props.vsId, resp) // TODO
   }
 
   fetchData = vsStructure => () => {
@@ -81,7 +87,9 @@ class VSProvider extends Component {
   render() {
     return (
       <VSContext.Provider value={ this.state.vsContext }>
+        <div style={ testStyle }>
         { this.props.children(this.state) }
+        </div>
       </VSContext.Provider>
     )
   }

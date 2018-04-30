@@ -15,7 +15,7 @@ const pageSections = {
 export default class Entry extends Component {
   render() {
     return (
-      <VSProvider id="myFirstVS" rootId="59c19f324ca8fc015b183339" structure={ { dun: 'tMAtterRightNow' } } >
+      <VSProvider vsId="myFirstVS" rootId="59c19f324ca8fc015b183339" structure={ { dun: 'tMAtterRightNow' } } >
         { ({ ready, isFetching, vsContext }) => (
           (!ready || isFetching) ? <div>...loading</div> : (
           <div>
@@ -23,7 +23,11 @@ export default class Entry extends Component {
             <VSFind find={ pageSections }>
               { ({ results }) => (
                 results.map(id =>
-                  <BasicVSEntity key={ id } vsId={ vsContext.vsId } id={ id } />
+                  <BasicVSEntity
+                    key={ id }
+                    id={ id }
+                    parentId={ fauxPageId }
+                  />
                 )
               ) }
             </VSFind>

@@ -14,7 +14,10 @@ export const EdgeDir = {
   }
 }
 
-export const getVS = vsId => state => state.vs[vsId];
+export const getVS = (state, props) =>  {
+  const vsId = props.vsId || props.vsContext.vsId;
+  return state.vs[vsId];
+}
 
 export const getLinkedServiceNodes = (vs, fromNode, service, direction = OUTGOING) => {
   const otherNode = EdgeDir[direction].otherNode;
@@ -25,7 +28,7 @@ export const getLinkedServiceNodes = (vs, fromNode, service, direction = OUTGOIN
 
 // TODO: figure out best way to curry fn
 export const getLinkedNodes = vsId => (state, fromNode, service, direction = OUTGOING) => {
-  const vs = getVS(vsId)(state);
+  const vs = getVS(state, { vsId });
   if (!service) {
     const allOutgoing = Object.keys(fromNode[direction]).map(service =>
       getLinkedServiceNodes(vs, fromNode, service, direction)
@@ -81,7 +84,7 @@ const _find = (layer, nodes, vs, data) => {
 }
 
 export const find = vsId => (state, query, fromId) => {
-  const vs = getVS(vsId)(state);
+  const vs = getVS(state, { vsId });
   const startId = fromId || vs.rootId;
   const startNode = vs.nodes[startId];
 
@@ -91,9 +94,10 @@ export const find = vsId => (state, query, fromId) => {
 export const getIds = vsId => (state, query) =>
   find(vsId)(state, query).map(n => n.id);
 
-export const getEntityState = (state, { vsId, id }) => getVS(vsId)(state).nodes[id];
+export const getEntityState = (state, props) => getVS(state, props).nodes[props.id];
 
-export const getEdgeState = (state, { id, parentId, vsId }) => {
+export const getEdgeState = (state, props) => {
+  const { id, parentId } = props;
   const edgeId = [id, parentId].sort().join('-');
-  return getVS(vsId)(state).edges[edgeId];
+  return getVS(state, props).edges[edgeId];
 }

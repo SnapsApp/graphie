@@ -105,7 +105,7 @@ export const testEntities = [
 export const expectNode = (entity, updateStatus) =>
   Object.assign({}, INIT_NODE, makeNode(entity, entity.service), {
     data: {
-      entity,
+      entity: {},
       updateStatus
     }
   });
