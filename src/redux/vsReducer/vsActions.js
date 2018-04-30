@@ -39,12 +39,13 @@ export const revertEntity = (vsId, id) => () => ({
   change: null,
   updateStatus: 'unchanged'
 })
+export const deleteEntity = (vsId, id) => () => Object.assign(gActions.deleteNode({ id }), { vsId });
 
 // TODO: test...
 const addEntity = vsId => node => Object.assign(gActions.addNode(node),
   { vsId, updateStatus: 'new' });
-const deleteEntity = vsId => node => Object.assign(gActions.deleteNode(node),
-  { vsId, updateStatus: 'deleted' });
+// const deleteEntity = vsId => node => Object.assign(gActions.deleteNode(node),
+//   { vsId, updateStatus: 'deleted' });
 
 const initLink = vsId => edge => Object.assign(gActions.addEdge(edge),
   { vsId, updateStatus: 'unchanged' });

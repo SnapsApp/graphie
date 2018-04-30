@@ -19,6 +19,9 @@ delete (delink)
 
 add (and link) child
 
+graph
+* check for deleted nodes and edges
+
 form via schema?
 validate via schema?
 */
