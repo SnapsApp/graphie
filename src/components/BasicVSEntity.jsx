@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import vsEntity, { VS_ENTITY_PROPS } from './vs/vsEntity';
 
 const style = {

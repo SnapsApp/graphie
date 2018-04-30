@@ -1,4 +1,4 @@
-import { nodeId, DEFAULT_NODE_TYPE, INIT_NODE } from '../graphReducer/test/common';
+import { nodeId, INIT_NODE } from '../graphReducer/test/common';
 
 export const testResponse = {
     "analyticspages": {

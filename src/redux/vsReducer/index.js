@@ -1,4 +1,4 @@
-import { createGraphReducer, createNodesReducer, defaultEdgeListReducer, edgeDirection } from '../graphReducer';
+import { createGraphReducer, createNodesReducer } from '../graphReducer';
 import { Atype as gAtype } from '../graphReducer/graphActions';
 import { Atype as vsAtype } from './vsActions';
 
@@ -30,6 +30,8 @@ const nodeDataReducer = (nData = INIT_NODE_DATA, action) => {
     default: return nData;
   }
 }
+
+// TODO: update
 const edgeDataReducer = (eData = INIT_EDGE_DATA, action) => {
   switch (action.type) {
     case gAtype.ADD_EDGE:

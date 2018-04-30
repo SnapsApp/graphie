@@ -48,16 +48,6 @@ const link = vsId => edge => Object.assign(gActions.addEdge(edge),
 const delink = vsId => edge => Object.assign(gActions.deleteEdge(edge),
   { vsId, updateStatus: 'deleted' });
 
-
-const graphActionFactories = Object.keys(gActions).reduce((actions, name) => {
-  actions[name] = vsId => (...args) => {
-    const action = gActions[name](...args);
-    action.vsId = vsId;
-    return action;
-  }
-  return actions;
-}, {});
-
 export const populateVS = (vsId, response) => {
   if (!response) return addVS(vsId);
 

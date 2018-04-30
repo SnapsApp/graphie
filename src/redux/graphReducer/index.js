@@ -92,7 +92,7 @@ export const createNodesReducer = (
       return Object.assign({}, state, { [id]: node });
     }
     case Atype.UPDATE_NODE: {
-      const { id, data, nodeType } = action;
+      const { id, nodeType } = action;
       let node = state[id];
       if (node) node = Object.assign({}, node, {
         data: dataReducer(node.data, action),
@@ -107,7 +107,7 @@ export const createNodesReducer = (
     }
     case Atype.ADD_EDGE:
     case Atype.DELETE_EDGE: {
-      const { origin, destin, id } = action;
+      const { origin, destin } = action;
       const originNode = state[origin] || {};
       const destinNode = state[destin] || {};
 
@@ -141,7 +141,7 @@ export const createEdgesReducer = (dataReducer = defaultEdgeDataReducer) =>
         return Object.assign({}, state, { [id]: edge });
       }
       case Atype.UPDATE_EDGE: {
-        const { id, data } = action;
+        const { id } = action;
         let edge = state[id];
         if (edge) edge = Object.assign({}, edge, { data: dataReducer(edge.data, action) });
         return Object.assign({}, state, { [id]: edge});
@@ -156,8 +156,8 @@ export const createEdgesReducer = (dataReducer = defaultEdgeDataReducer) =>
   }
 
 export const createGraphReducer = (
-  nodes = createNodesReducer(),
-  edges = createEdgesReducer()
+  nodesReducer = createNodesReducer(),
+  edgesReducer = createEdgesReducer()
 ) => {
   const graphreducer = (state = INIT_STATE, action) => {
     // pack data from state onto actions here.
@@ -166,7 +166,7 @@ export const createGraphReducer = (
     switch (action.type) {
       case Atype.ADD_EDGE: {
         const { origin, destin, id } = action;
-        const { nodes = {}, edge = {} } = state;
+        const { nodes = {}, edges = {} } = state;
 
         if (edges[id] || !nodes[origin] || !nodes[destin]) return state;
         break;
@@ -179,8 +179,6 @@ export const createGraphReducer = (
       case Atype.DELETE_NODE: {
         const node = state.nodes[action.id];
         if (node) {
-          const { outgoing, incoming } = node;
-
           const deleteEdgesThenNode = allEdges(node)
             .map(id => Action.deleteEdge(state.edges[id]))
             .concat(Action.clearNode(node));
@@ -190,11 +188,13 @@ export const createGraphReducer = (
               return graphreducer(state, action)
             }, state);
         }
+        break;
       }
+      default: break;
     }
     return {
-      nodes: nodes(state.nodes, Object.assign({}, action, packOntoAction)),
-      edges: edges(state.edges, Object.assign({}, action, packOntoAction)),
+      nodes: nodesReducer(state.nodes, Object.assign({}, action, packOntoAction)),
+      edges: edgesReducer(state.edges, Object.assign({}, action, packOntoAction)),
     }
   }
   return graphreducer
