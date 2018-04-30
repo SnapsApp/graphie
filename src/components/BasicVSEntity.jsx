@@ -14,7 +14,10 @@ class BasicVSEntity extends Component {
   }
   render() {
     return (
-      <div style={ style }>{ this.props.entity.id }: { this.props.entity.name }</div>
+      <div style={ style }>
+        <div>{ this.props.entity.id }: { this.props.entity.name }</div>
+        <div>myOrderIndex: { this.props.edgeToParent.orderIndex }</div>
+      </div>
     )
   }
 }

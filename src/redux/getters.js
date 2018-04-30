@@ -14,12 +14,13 @@ export const mapEntity = (state, props) => {
 
 // TODO: test
 export const mapEdge = (state, props) => {
-  const { vsId, parentId, id } = props;
+  const { parentId, id } = props;
+  const parentProps = Object.assign({}, props, { id: parentId });
 
   if (!parentId) return;
 
   const node = getEntityState(state, props);
-  const parentNode = getEntityState(state, { vsId, id: parentId });
+  const parentNode = getEntityState(state, parentProps);
 
   const data = getEdgeData(state, {
     service: node.nodeType,

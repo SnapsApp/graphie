@@ -23,10 +23,8 @@ export const VS_ENTITY_PROPS = {
 }
 
 const mapStateToProps = (state, props) => ({
-  // entity: mapEntity(state, props),
-  // edgeToParent: mapEdge(state, props)
-  entity: {},
-  edgeToParent: {}
+  entity: mapEntity(state, props),
+  edgeToParent: mapEdge(state, props)
 })
 
 const mapDispatchToProps = (dispatch, props) => bindActionCreators({
@@ -38,7 +36,6 @@ const vsEntity = Child => {
     static propTypes = VS_ENTITY_PROPS
 
     render() {
-      console.log('props', this.props);
       return <Child { ...this.props } />
     }
   }
