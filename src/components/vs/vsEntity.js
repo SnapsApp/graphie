@@ -26,12 +26,17 @@ export const VS_ENTITY_PROPS = {
   id: PropTypes.string.isRequired,
   parentId: PropTypes.string, // Required for edge functionality
 
-  // mapped
+  // MAPPED
+  // entity - TODO: split into two wrappers (one for entity and one for edge to parent)
   entity: PropTypes.object.isRequired,
   apiUpdateEntity: PropTypes.func.isRequired,
   apiRevertEntity: PropTypes.func.isRequired,
   apiDeleteEntity: PropTypes.func.isRequired,
+  // apiAddChild: PropTypes.func.isRequired,
+
+  // edge to parent
   edgeToParent: PropTypes.object,
+  // apiDelink: PropTypes.func.isRequired,
   ...VS_CONTEXT_PROPS
 }
 
@@ -44,6 +49,7 @@ const mapDispatchToProps = (dispatch, props) => bindActionCreators({
   apiUpdateEntity: updateEntity(props.vsContext.vsId, props.id),
   apiRevertEntity: revertEntity(props.vsContext.vsId, props.id),
   apiDeleteEntity: deleteEntity(props.vsContext.vsId, props.id),
+  // apiAddChild: addChild(props.vsContext.vsId, props.id),
 }, dispatch)
 
 const vsEntity = Child => {

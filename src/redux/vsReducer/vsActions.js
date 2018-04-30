@@ -1,9 +1,10 @@
 import gActions, { Atype as gAtype } from '../graphReducer/graphActions';
-import { parseVSdata } from './common';
+import { parseVSdata, getEdgeId } from './common';
 
 const ADD_VS = 'vs/add_vs';
 const CLEAR_VS = 'vs/clear_vs';
 const SET_ROOT = 'vs/set_root';
+const ADD_CHILD = 'vs/add_child';
 
 const addVS = (vsId, actions, rootId) => ({
   type: ADD_VS,
@@ -41,7 +42,26 @@ export const revertEntity = (vsId, id) => () => ({
 })
 export const deleteEntity = (vsId, id) => () => Object.assign(gActions.deleteNode({ id }), { vsId });
 
+export const link = vsId => (parentId, childId, edgeData) => Object.assign(gActions.addEdge({
+  id: getEdgeId(parentId, childId),
+  data: edgeData,
+  origin: parentId,
+  destin: childId
+}), { vsId });
+
+// export const addChild = (vsId, parentId) => (childId, service, data) => {
+//   const actions = [
+//     addNode({ id, data, nodeType: service }),
+//     link()
+//   ]
+//   return {
+//     type: ADD_CHILD,
+//     actions
+//   };
+// }
+
 // TODO: test...
+
 const addEntity = vsId => node => Object.assign(gActions.addNode(node),
   { vsId, updateStatus: 'new' });
 // const deleteEntity = vsId => node => Object.assign(gActions.deleteNode(node),
@@ -51,8 +71,6 @@ const initLink = vsId => edge => Object.assign(gActions.addEdge(edge),
   { vsId, updateStatus: 'unchanged' });
 const updateLink = vsId => edge => Object.assign(gActions.updateEdge(edge),
   { vsId, updateStatus: 'updated' });
-const link = vsId => edge => Object.assign(gActions.addEdge(edge),
-  { vsId, updateStatus: 'new' });
 const delink = vsId => edge => Object.assign(gActions.deleteEdge(edge),
   { vsId, updateStatus: 'deleted' });
 

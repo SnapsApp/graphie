@@ -2,16 +2,24 @@ import React, { Component } from 'react';
 import vsEntity, { VS_ENTITY_PROPS } from './vs/vsEntity';
 import simpleState from './simpleState';
 
-const style = {
+const border = {
   margin: '10px',
   border: '1px solid black',
   padding: '10px',
+}
+const parentInfo = {
   display: 'flex',
+  flexDirection: 'row'
 }
 const dataBlock = {
   textAlign: 'left',
   padding: '10px',
   width: '50%'
+}
+
+const childBlock = {
+  display: 'flex',
+  justifyContent: 'space-around'
 }
 
 const thisForm = 'entity-form';
@@ -41,43 +49,48 @@ class ExampleVSEntity extends Component {
 
   render() {
     const { entity } = this.props;
-    const { id, name, isHidden } = entity;
+    const { id, name, isHidden, entityType } = entity;
     return (
-      <div style={ style }>
-        <div style={ dataBlock }>
-          <h3>Current data</h3>
-          <p>Name: { name }</p>
-          <p>Hidden: { JSON.stringify(isHidden) }</p>
-          <p>Id: { id }</p>
-          <p>OrderIndex: { this.props.edgeToParent.orderIndex }</p>
+      <div style={ border }>
+        <div style={ parentInfo }>
+          <div style={ dataBlock }>
+            <h3>{ entityType }</h3>
+            <p>Name: { name }</p>
+            <p>Hidden: { JSON.stringify(isHidden) }</p>
+            <p>Id: { id }</p>
+            <p>OrderIndex: { this.props.edgeToParent.orderIndex }</p>
+          </div>
+          <div style={ dataBlock }>
+            <h3>Edit data</h3>
+            <form onSubmit={ this.update }>
+              <p>
+                <label>Name:
+                  <input
+                    type="text"
+                    value={ this.props[thisForm].values.name }
+                    onChange={ this.props[thisForm].changeHandlers.name }
+                  />
+                </label>
+              </p>
+              <p>
+                <label>Hidden:
+                  <input
+                    type="checkbox"
+                    checked={ this.props[thisForm].values.isHidden }
+                    onChange={ this.props[thisForm].changeHandlers.isHidden }
+                  />
+                </label>
+              </p>
+              <button type="submit">Save</button>
+              <button>Clear</button>
+            </form>
+            <button onClick={ this.revert }>Revert</button>
+            <button onClick={ this.delete }>Delete</button>
+            <button onClick={ this.delink }>Delink</button>
+          </div>
         </div>
-        <div style={ dataBlock }>
-          <h3>Edit data</h3>
-          <form onSubmit={ this.update }>
-            <p>
-              <label>Name:
-                <input
-                  type="text"
-                  value={ this.props[thisForm].values.name }
-                  onChange={ this.props[thisForm].changeHandlers.name }
-                />
-              </label>
-            </p>
-            <p>
-              <label>Hidden:
-                <input
-                  type="checkbox"
-                  checked={ this.props[thisForm].values.isHidden }
-                  onChange={ this.props[thisForm].changeHandlers.isHidden }
-                />
-              </label>
-            </p>
-            <button type="submit">Save</button>
-            <button>Clear</button>
-          </form>
-          <button onClick={ this.revert }>Revert</button>
-          <button onClick={ this.delete }>Delete</button>
-          <button onClick={ this.delink }>Delink</button>
+        <div style={ childBlock }>
+          { this.props.children }
         </div>
       </div>
     )

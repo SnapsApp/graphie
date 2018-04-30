@@ -22,6 +22,16 @@ export const makeNode = (entity, service) => ({
 });
 export const getEdgeId = (a, b) => [a, b].sort().join('-');
 
+const generateEdgeData = (parentId, parentService, childId, childService, otherEdgeData) => {
+  const standardEdges = {
+    parentService,
+    parentId,
+    childService,
+    childId
+  };
+  return Object.assign({}, standardEdges, otherEdgeData);
+}
+
 export const makeEdge = edge => {
   const origin = edge.parentId;
   const destin = edge.childId;
