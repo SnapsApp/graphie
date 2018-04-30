@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import VSProvider from './vs/VSProvider';
 import VSFind from './vs/VSFind';
-import BasicVSEntity from './BasicVSEntity';
+import ExampleVSEntity from './ExampleVSEntity';
 
 // https://beta.snapsmedia.io/591477753e5c5f06673c7d29/analytics/app/59d3afd032d2f16ca2996bc3/page/59c19f324ca8fc015b183339
 const fauxPageId = '59c19f324ca8fc015b183339';
@@ -23,7 +23,7 @@ export default class Entry extends Component {
             <VSFind find={ pageSections }>
               { ({ results }) => (
                 results.map(id =>
-                  <BasicVSEntity
+                  <ExampleVSEntity
                     key={ id }
                     id={ id }
                     parentId={ fauxPageId }

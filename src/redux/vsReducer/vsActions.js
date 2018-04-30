@@ -25,7 +25,7 @@ const setRoot = vsId => rootId => ({
 const initEntity = vsId => node => Object.assign(gActions.addNode(node),
   { vsId, updateStatus: 'unchanged' });
 
-export const updateEntity = vsId => ({ id, change }) => ({
+export const updateEntity = (vsId, id) => change => ({
   type: gAtype.UPDATE_NODE,
   vsId,
   id,

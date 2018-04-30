@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import vsEntity, { VS_ENTITY_PROPS } from './vs/vsEntity';
+import simpleState from './simpleState';
 
 const style = {
   margin: '10px',
@@ -13,15 +14,24 @@ const dataBlock = {
   width: '50%'
 }
 
-class BasicVSEntity extends Component {
+const thisForm = 'entity-form';
+
+const getInitialForm = props => {
+  const { name, isHidden } = props.entity;
+  return { name, isHidden };
+}
+
+class ExampleVSEntity extends Component {
   static propTypes = {
     ...VS_ENTITY_PROPS
   }
 
   update = e => {
     e.preventDefault();
+    console.log(e.target);
+    this.props.apiUpdateEntity()
   }
-  clear = () => {}
+  revert = () => {}
   delete = () => {}
   delink = () => {}
 
@@ -40,11 +50,28 @@ class BasicVSEntity extends Component {
         <div style={ dataBlock }>
           <h3>Edit data</h3>
           <form onSubmit={ this.update }>
-            <p><label>Name: <input type="text" defaultValue={ name } /></label></p>
-            <p><label>Hidden: <input type="checkbox" defaultValue={ isHidden } /></label></p>
+            <p>
+              <label>Name:
+                <input
+                  type="text"
+                  value={ this.props[thisForm].values.name }
+                  onChange={ this.props[thisForm].changeHandlers.name }
+                />
+              </label>
+            </p>
+            <p>
+              <label>Hidden:
+                <input
+                  type="checkbox"
+                  value={ this.props[thisForm].values.isHidden }
+                  onChange={ this.props[thisForm].changeHandlers.isHidden }
+                />
+              </label>
+            </p>
             <button>Save</button>
+            <button>Clear</button>
           </form>
-          <button onClick={ this.clear }>Clear</button>
+          <button onClick={ this.revert }>Revert</button>
           <button onClick={ this.delete }>Delete</button>
           <button onClick={ this.delink }>Delink</button>
         </div>
@@ -54,4 +81,4 @@ class BasicVSEntity extends Component {
 }
 
 
-export default vsEntity(BasicVSEntity);
+export default vsEntity(simpleState(thisForm, getInitialForm)(ExampleVSEntity));

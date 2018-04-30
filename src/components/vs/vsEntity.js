@@ -28,8 +28,8 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch, props) => bindActionCreators({
-  apiUpdateEntity: updateEntity(props.vsId)
-})
+  apiUpdateEntity: updateEntity(props.vsId, props.id)
+}, dispatch)
 
 const vsEntity = Child => {
   class ConnectVsEntity extends Component {

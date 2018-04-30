@@ -1,6 +1,14 @@
 /*
-test
+thoughts:
+* how will edge updating work?
+* when will you have a case of editing multiple entities before clicking save? (rules and rulesets)
 
+
+check:
+what gets rerendered when the state changes?
+- vulnerable points: VSFind
+
+implement:
 update entity update
 clear entity
 delete (and delink) entity
@@ -13,9 +21,6 @@ add (and link) child
 
 form via schema?
 validate via schema?
-*/
-
-/*
 */
 
 /*
