@@ -1,8 +1,18 @@
 /*
+test
+
 update entity update
+clear entity
+delete (and delink) entity
 
-update edge update
+update edge data
+clear edge data
+delete (delink)
 
+add (and link) child
+
+form via schema?
+validate via schema?
 */
 
 /*
