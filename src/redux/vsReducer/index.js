@@ -23,7 +23,7 @@ const nodeDataReducer = (nData = INIT_NODE_DATA, action) => {
     case gAtype.UPDATE_NODE: {
       const { change, updateStatus } = action;
       return {
-        entity: Object.assign({}, nData.entity, change),
+        entity: change === null ? undefined : Object.assign({}, nData.entity, change),
         updateStatus: updateStatus || nData.updateStatus
       }
     }

@@ -26,13 +26,17 @@ class ExampleVSEntity extends Component {
     ...VS_ENTITY_PROPS
   }
 
+  // entity functions
   update = e => {
     e.preventDefault();
     // do any other preprocessing or data packing here
     this.props.apiUpdateEntity(this.props[thisForm].values);
   }
-  revert = () => {}
-  delete = () => {}
+  revert = () => this.props.apiRevertEntity();
+  delete = () => this.props.apiDeleteEntity();
+  // addChild = () => this.props.addChild();
+
+  //
   delink = () => {}
 
   render() {
@@ -43,7 +47,7 @@ class ExampleVSEntity extends Component {
         <div style={ dataBlock }>
           <h3>Current data</h3>
           <p>Name: { name }</p>
-          <p>Hidden: { isHidden }</p>
+          <p>Hidden: { JSON.stringify(isHidden) }</p>
           <p>Id: { id }</p>
           <p>OrderIndex: { this.props.edgeToParent.orderIndex }</p>
         </div>
@@ -63,7 +67,7 @@ class ExampleVSEntity extends Component {
               <label>Hidden:
                 <input
                   type="checkbox"
-                  value={ this.props[thisForm].values.isHidden }
+                  checked={ this.props[thisForm].values.isHidden }
                   onChange={ this.props[thisForm].changeHandlers.isHidden }
                 />
               </label>

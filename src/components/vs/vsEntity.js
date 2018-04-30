@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
-import { updateEntity } from '../../redux/vsReducer/vsActions';
+import { updateEntity, revertEntity } from '../../redux/vsReducer/vsActions';
 import { mapEntity, mapEdge } from '../../redux/getters';
 
 export const VS_ENTITY_PROPS = {
@@ -39,7 +39,8 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch, props) => bindActionCreators({
-  apiUpdateEntity: updateEntity(props.vsContext.vsId, props.id)
+  apiUpdateEntity: updateEntity(props.vsContext.vsId, props.id),
+  apiRevertEntity: revertEntity(props.vsContext.vsId, props.id)
 }, dispatch)
 
 const vsEntity = Child => {

@@ -1,30 +1,38 @@
 /*
-simpleState(formId, flat state object)(Child)
+simpleState(formId, flatStateObject)(Child)
 
 passes a prop called [formId] with values and changehandlers for each field
-{
+
+this.props[formId] = {
   values: { [someField]: someValue, ...etc },
   changeHandlers: { [someField]: someValue, ...etc },
-
+  refresh
 }
 */
 
 import React, { Component } from 'react';
 
-const simpleState = (formId, initFormFromProps) => Child => {
+const simpleState = (formId, formFromProps) => Child => {
   class wrapSimpleState extends Component {
     constructor(props) {
       super(props);
-      const initialState = initFormFromProps(this.props);
-      const fields = Object.keys(initialState);
-      this.state = fields.reduce((map, field) => {
-        map.values[field] = initialState[field];
-        map.changeHandlers[field] = this.makeHandleChange(field);
+      const form = formFromProps(this.props);
+      const changeHandlers = Object.keys(form).reduce((map, field) => {
+        map[field] = this.makeHandleChange(field);
         return map;
-      }, {
-        values: {},
-        changeHandlers: {}
-      });
+      }, {});
+
+      this.state = {
+        values: Object.assign({}, form),
+        changeHandlers
+      };
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+      return {
+        values: Object.assign({}, formFromProps(nextProps)),
+        changeHandlers: prevState.changeHandlers
+      };
     }
 
     makeHandleChange = field => e => {

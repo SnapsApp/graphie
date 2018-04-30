@@ -32,6 +32,13 @@ export const updateEntity = (vsId, id) => change => ({
   change,
   updateStatus: 'updated'
 })
+export const revertEntity = (vsId, id) => () => ({
+  type: gAtype.UPDATE_NODE,
+  vsId,
+  id,
+  change: null,
+  updateStatus: 'unchanged'
+})
 
 // TODO: test...
 const addEntity = vsId => node => Object.assign(gActions.addNode(node),
