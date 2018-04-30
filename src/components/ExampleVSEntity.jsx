@@ -41,6 +41,7 @@ class ExampleVSEntity extends Component {
     // do any other preprocessing or data packing here
     this.props.apiUpdateEntity(this.props[thisForm].values);
   }
+  clear = () => this.props[thisForm].reset();
   revert = () => this.props.apiRevertEntity();
   delete = () => this.props.apiDeleteEntity();
   // addChild = () => this.props.addChild();
@@ -60,6 +61,9 @@ class ExampleVSEntity extends Component {
             <p>Hidden: { JSON.stringify(isHidden) }</p>
             <p>Id: { id }</p>
             <p>OrderIndex: { this.props.edgeToParent.orderIndex }</p>
+            <button onClick={ this.revert }>Revert</button>
+            <button onClick={ this.delete }>Delete</button>
+            <button onClick={ this.delink }>Delink</button>
           </div>
           <div style={ dataBlock }>
             <h3>Edit data</h3>
@@ -83,11 +87,8 @@ class ExampleVSEntity extends Component {
                 </label>
               </p>
               <button type="submit">Save</button>
-              <button>Clear</button>
+              <button type="button" onClick={ this.clear }>Clear</button>
             </form>
-            <button onClick={ this.revert }>Revert</button>
-            <button onClick={ this.delete }>Delete</button>
-            <button onClick={ this.delink }>Delink</button>
           </div>
         </div>
         <div style={ childBlock }>

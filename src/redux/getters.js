@@ -29,9 +29,11 @@ export const mapEdge = (state, props) => {
     parentService: parentNode.nodeType
   });
 
+  const edgeState = getEdgeState(state, props) || {};
+
   const edge = Object.assign({},
     data,
-    getEdgeState(state, props)
+    edgeState.data
   );
 
   return edge;

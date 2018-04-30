@@ -24,16 +24,18 @@ const simpleState = (formId, formFromProps) => Child => {
 
       this.state = {
         values: Object.assign({}, form),
-        changeHandlers
+        changeHandlers,
+        reset: this.reset
       };
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-      return {
+      return Object.assign({}, prevState, {
         values: Object.assign({}, formFromProps(nextProps)),
-        changeHandlers: prevState.changeHandlers
-      };
+      })
     }
+
+    reset = () => this.setState(wrapSimpleState.getDerivedStateFromProps(this.props, this.state))
 
     makeHandleChange = field => e => {
       let value;

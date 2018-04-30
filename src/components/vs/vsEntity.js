@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
-import { updateEntity, revertEntity, deleteEntity } from '../../redux/vsReducer/vsActions';
+import { updateEntity, revertEntity, deleteEntity, linkEntities, delinkEntities } from '../../redux/vsReducer/vsActions';
 import { mapEntity, mapEdge } from '../../redux/getters';
 
 export const VS_ENTITY_PROPS = {
@@ -36,7 +36,8 @@ export const VS_ENTITY_PROPS = {
 
   // edge to parent
   edgeToParent: PropTypes.object,
-  // apiDelink: PropTypes.func.isRequired,
+  apiLink: PropTypes.func.isRequired,
+  apiDelink: PropTypes.func.isRequired,
   ...VS_CONTEXT_PROPS
 }
 
@@ -50,6 +51,9 @@ const mapDispatchToProps = (dispatch, props) => bindActionCreators({
   apiRevertEntity: revertEntity(props.vsContext.vsId, props.id),
   apiDeleteEntity: deleteEntity(props.vsContext.vsId, props.id),
   // apiAddChild: addChild(props.vsContext.vsId, props.id),
+
+  apiLink: linkEntities(props.vsContext.vsId),
+  apiDelink: delinkEntities(props.vsContext.vsId),
 }, dispatch)
 
 const vsEntity = Child => {

@@ -58,8 +58,8 @@ export default class Entry extends Component {
                           key={ rId }
                           id={ rId }
                           background="pink"
-                          parentId={ id }
                           isLinked={ false }
+                          linkTo={ id }
                         />
                       ) }
                     </VSFind>

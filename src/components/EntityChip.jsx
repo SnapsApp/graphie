@@ -16,15 +16,16 @@ class EntityChip extends Component {
   static propTypes = {
     ...VS_ENTITY_PROPS,
     background: PropTypes.string,
-    isLinked: PropTypes.bool
+    isLinked: PropTypes.bool,
+    linkTo: PropTypes.string
   }
 
   delete = () => this.props.apiDeleteEntity();
-  delink = () => {}
-  link = () => {}
+  delink = () => this.props.apiDelink(this.props.parentId, this.props.id);
+  link = () => this.props.apiLink(this.props.linkTo, this.props.id);
 
   render() {
-    const { entity, background, isLinked } = this.props;
+    const { entity, edgeToParent, background, isLinked } = this.props;
     const { id, name, isHidden, entityType } = entity;
     return (
       <div style={ chip(background) }>
@@ -32,9 +33,12 @@ class EntityChip extends Component {
         { isLinked && <button onClick={ this.delink }>Delink Me</button> }
         <h3>{ entityType }</h3>
         <p>Name: { name }</p>
-        <p>Hidden: { JSON.stringify(isHidden) }</p>
-        <p>Id: { id }</p>
-        <p>OrderIndex: { this.props.edgeToParent.orderIndex }</p>
+        {
+          isLinked &&
+          Object.keys(edgeToParent).map(edgeKey =>
+            <p key={ edgeKey }>{ edgeKey }: { edgeToParent[edgeKey] }</p>
+          )
+        }
       </div>
     )
   }
