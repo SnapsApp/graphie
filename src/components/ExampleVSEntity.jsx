@@ -19,7 +19,8 @@ const dataBlock = {
 
 const childBlock = {
   display: 'flex',
-  justifyContent: 'space-around'
+  justifyContent: 'space-around',
+  flexWrap: 'wrap'
 }
 
 const thisForm = 'entity-form';

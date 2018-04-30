@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import VSProvider from './vs/VSProvider';
 import VSFind from './vs/VSFind';
 import ExampleVSEntity from './ExampleVSEntity';
@@ -18,14 +18,12 @@ const linkedReports = (id) => ({
     analyticsreports: {}
   }
 });
-
-
-const otherReports = {
+const notLinkedReports = (id) => ({
   analyticspagesections: {
-    _filter: entity => entity.active === false,
+    _filter: entity => entity.id !== id,
     analyticsreports: {}
   }
-};
+});
 
 export default class Entry extends Component {
   render() {
@@ -42,15 +40,30 @@ export default class Entry extends Component {
                   id={ id }
                   parentId={ fauxPageId }
                 >
-                  <VSFind find={ linkedReports(id) }>
-                    { ({ results: reports }) => reports.map(rId =>
-                      <EntityChip
-                        key={ rId }
-                        id={ rId }
-                        parentId={ id }
-                      />
-                    ) }
-                  </VSFind>
+                  <Fragment>
+                    <VSFind find={ linkedReports(id) }>
+                      { ({ results: reports }) => reports.map(rId =>
+                        <EntityChip
+                          key={ rId }
+                          id={ rId }
+                          background="lavender"
+                          parentId={ id }
+                          isLinked={ true }
+                        />
+                      ) }
+                    </VSFind>
+                    <VSFind find={ notLinkedReports(id) }>
+                      { ({ results: notLinked }) => notLinked.map(rId =>
+                        <EntityChip
+                          key={ rId }
+                          id={ rId }
+                          background="pink"
+                          parentId={ id }
+                          isLinked={ false }
+                        />
+                      ) }
+                    </VSFind>
+                  </Fragment>
                 </ExampleVSEntity>
               ) }
             </VSFind>
