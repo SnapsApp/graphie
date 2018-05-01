@@ -1,6 +1,7 @@
 import { createGraphReducer, createNodesReducer, createEdgesReducer, INIT_STATE, allEdges } from '../graphReducer';
 import { Atype as gAtype, default as gAction } from '../graphReducer/graphActions';
 import { Atype as vsAtype } from './vsActions';
+import { addStandardEdgeData } from './common';
 
 const INIT_NODE_DATA = {
   entity: undefined,
@@ -37,6 +38,7 @@ const edgeDataReducer = (eData = INIT_EDGE_DATA, action) => {
     case gAtype.ADD_EDGE:
     case gAtype.UPDATE_EDGE: {
       const { data, updateStatus } = action;
+
       return {
         edge: data,
         updateStatus: updateStatus || eData.updateStatus
@@ -87,6 +89,15 @@ const vsreducer = (state = {}, action) => {
       const { vsId, rootId } = action;
       const newVS = Object.assign({}, state[vsId], { rootId });
       return Object.assign({}, state, { [vsId]: newVS });
+    }
+    case gAtype.ADD_EDGE: {
+      const { edgeData, origin, destin } = action;
+      const parent = vs.nodes[origin];
+      const child = vs.nodes[destin];
+      const edgeWithStandardKeys = addStandardEdgeData(parent.id, parent.nodeType, child.id, child.nodeType, edgeData);
+
+      packedAction = Object.assign(action, { data: edgeWithStandardKeys });
+      break;
     }
     case gAtype.DELETE_NODE: {
       const node = vs.nodes[action.id];

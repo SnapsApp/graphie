@@ -22,7 +22,7 @@ export const makeNode = (entity, service) => ({
 });
 export const getEdgeId = (a, b) => [a, b].sort().join('-');
 
-const generateEdgeData = (parentId, parentService, childId, childService, otherEdgeData) => {
+export const addStandardEdgeData = (parentId, parentService, childId, childService, otherEdgeData) => {
   const standardEdges = {
     parentService,
     parentId,

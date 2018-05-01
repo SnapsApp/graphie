@@ -49,9 +49,10 @@ export const linkEntities = vsId => (parentId, childId, edgeData) =>
     data: edgeData,
     origin: parentId,
     destin: childId
-  }), { vsId });
+  }), { vsId, updateStatus: 'new' });
 
-export const delinkEntities = vsId => () => {}
+export const delinkEntities = vsId => (parentId, childId) =>
+  Object.assign(gActions.deleteEdge({ id: getEdgeId(parentId, childId) }), { vsId });
 
 // export const addChild = (vsId, parentId) => (childId, service, data) => {
 //   const actions = [
@@ -101,14 +102,14 @@ const Action = {
   revertEntity,
   deleteEntity,
 
+  linkEntities,
+  delinkEntities,
   // TODO: test
   clearVS,
   addEntity,
 
   initLink,
   updateLink,
-  // link,
-  // delink
 };
 
 export const Atype = {
