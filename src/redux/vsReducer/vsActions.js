@@ -40,7 +40,6 @@ export const revertEntity = (vsId, id) => () => ({
   change: null,
   updateStatus: 'unchanged'
 })
-
 export const deleteEntity = (vsId, id) => node => Object.assign(gActions.deleteNode({ id }), { vsId });
 
 export const linkEntities = vsId => (parentId, childId, edgeData) =>
@@ -50,9 +49,11 @@ export const linkEntities = vsId => (parentId, childId, edgeData) =>
     origin: parentId,
     destin: childId
   }), { vsId, updateStatus: 'new' });
-
 export const delinkEntities = vsId => (parentId, childId) =>
   Object.assign(gActions.deleteEdge({ id: getEdgeId(parentId, childId) }), { vsId });
+export const updateEdge = (vsId, id) => data => Object.assign(gActions.updateEdge({ id, data }),
+  { vsId, updateStatus: 'updated' });
+
 
 // export const addChild = (vsId, parentId) => (childId, service, data) => {
 //   const actions = [
@@ -72,10 +73,6 @@ const addEntity = vsId => node => Object.assign(gActions.addNode(node),
 
 const initLink = vsId => edge => Object.assign(gActions.addEdge(edge),
   { vsId, updateStatus: 'unchanged' });
-const updateLink = vsId => edge => Object.assign(gActions.updateEdge(edge),
-  { vsId, updateStatus: 'updated' });
-const delink = vsId => edge => Object.assign(gActions.deleteEdge(edge),
-  { vsId, updateStatus: 'deleted' });
 
 export const populateVS = (vsId, response) => {
   if (!response) return addVS(vsId);
@@ -102,14 +99,17 @@ const Action = {
   revertEntity,
   deleteEntity,
 
+  initLink,
   linkEntities,
   delinkEntities,
-  // TODO: test
-  clearVS,
-  addEntity,
+  updateEdge,
 
-  initLink,
-  updateLink,
+  // TODO: test
+  addEntity,
+  // addEntityToParent
+  clearVS,
+
+  // revertLink?
 };
 
 export const Atype = {
