@@ -1,10 +1,5 @@
 /*
 thoughts:
-* how will graph work with deleted nodes/edge
-** nodes would have something to compare to but edges will have to be marked
-** and graph reducer can't do both so mark both instead of clearing. ARG
-** which means updating the FIND function.
-*** updating the delete to mark all corresponding edges. ARGH
 * when will you have a case of editing multiple entities before clicking save? (rules and rulesets)
 
 check:

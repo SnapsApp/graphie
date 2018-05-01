@@ -1,6 +1,6 @@
 import Action, { Atype } from './graphActions';
 
-const INIT_STATE = { nodes: {}, edges: {} };
+export const INIT_STATE = { nodes: {}, edges: {} };
 
 export const DEFAULT_NODE_TYPE = 'node';
 
@@ -24,7 +24,7 @@ const initEdge = (
   destin = undefined
 ) => ({ id, data, origin, destin });
 
-const allEdges = node => ['incoming', 'outgoing'].reduce((all, dir) => {
+export const allEdges = node => ['incoming', 'outgoing'].reduce((all, dir) => {
   const edgesInDirection = Object.keys(node[dir]).reduce((list, nodeType) =>
     list.concat(node[dir][nodeType]), []);
   return all.concat(edgesInDirection);

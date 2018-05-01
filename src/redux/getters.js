@@ -33,7 +33,7 @@ export const mapEdge = (state, props) => {
 
   const edge = Object.assign({},
     data,
-    edgeState.data
+    edgeState.data.edge
   );
 
   return edge;
