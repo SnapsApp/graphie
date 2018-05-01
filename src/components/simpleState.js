@@ -6,7 +6,7 @@ passes a prop called [formId] with values and changehandlers for each field
 this.props[formId] = {
   values: { [someField]: someValue, ...etc },
   changeHandlers: { [someField]: someValue, ...etc },
-  refresh
+  reset
 }
 */
 

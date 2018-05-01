@@ -51,7 +51,7 @@ export const linkEntities = vsId => (parentId, childId, edgeData) =>
   }), { vsId, updateStatus: 'new' });
 export const delinkEntities = vsId => (parentId, childId) =>
   Object.assign(gActions.deleteEdge({ id: getEdgeId(parentId, childId) }), { vsId });
-export const updateEdge = (vsId, id) => data => Object.assign(gActions.updateEdge({ id, data }),
+export const updateEdgeToParent = (vsId, parentId, id) => data => Object.assign(gActions.updateEdge({ id: getEdgeId(parentId, id), data }),
   { vsId, updateStatus: 'updated' });
 
 
@@ -102,7 +102,7 @@ const Action = {
   initLink,
   linkEntities,
   delinkEntities,
-  updateEdge,
+  updateEdgeToParent,
 
   // TODO: test
   addEntity,

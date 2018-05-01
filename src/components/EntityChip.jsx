@@ -30,9 +30,10 @@ class EntityChip extends Component {
   delete = () => this.props.apiDeleteEntity();
   delink = () => this.props.apiDelink(this.props.parentId, this.props.id);
   link = () => this.props.apiLink(this.props.linkTo, this.props.id);
-  updateEdge = () => {
+  updateEdge = e => {
+    e.preventDefault();
     const edgeData = this.props[edgeFormId].values;
-    this.props.apiUpdateEdge(edgeData);
+    this.props.apiUpdateEdgeToParent(edgeData);
   }
 
   render() {
