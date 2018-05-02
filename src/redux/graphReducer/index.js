@@ -65,8 +65,7 @@ const edgeListWithTypes = (map = {}, action) => {
   switch (action.type) {
     case Atype.ADD_EDGE:
     case Atype.DELETE_EDGE: {
-      const { direction, outgoingType = DEFAULT_NODE_TYPE, incomingType = DEFAULT_NODE_TYPE } = action;
-      const nodeType = direction.OUTGOING ? outgoingType : incomingType;
+      const { direction, nodeType = DEFAULT_NODE_TYPE } = action;
       const updatedEdgeType = defaultEdgeListReducer(map[nodeType], action);
 
       const newMap = Object.assign({}, map);
@@ -111,12 +110,13 @@ export const createNodesReducer = (
       const originNode = state[origin] || {};
       const destinNode = state[destin] || {};
 
-      const outgoingType = originNode.nodeType;
-      const incomingType = destinNode.nodeType;
-
-      const packedAction = Object.assign({}, action, { outgoingType, incomingType });
-      const edgeFrom = Object.assign({}, packedAction, { direction: edgeDirection.OUTGOING });
-      const edgeTo = Object.assign({}, packedAction, { direction: edgeDirection.INCOMING });
+      const packedAction = Object.assign({}, action);
+      const edgeFrom = Object.assign({}, packedAction,
+        { direction: edgeDirection.OUTGOING, nodeType: destinNode.nodeType  }
+      );
+      const edgeTo = Object.assign({}, packedAction,
+        { direction: edgeDirection.INCOMING, nodeType: originNode.nodeType }
+      );
 
       const outgoing = edgeListWithTypes(originNode.outgoing, edgeFrom);
       const incoming = edgeListWithTypes(destinNode.incoming, edgeTo);
