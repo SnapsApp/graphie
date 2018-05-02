@@ -1,7 +1,7 @@
 import expect from 'expect';
 import vsReducer from './index';
 import Action from './vsActions';
-import { getLinkedNodes, find } from './vsGetters';
+import { find } from './vsGetters';
 
 import { testResponse, parseVSdata, testEntities, makeNode, expectNode } from './common'
 

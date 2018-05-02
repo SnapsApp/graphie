@@ -1,3 +1,5 @@
+import { getEdgeId } from './common.js';
+
 const OUTGOING = 'outgoing';
 const INCOMING = 'incoming';
 const ORIGIN = 'origin';
@@ -27,19 +29,7 @@ export const getLinkedServiceNodes = (vs, fromNode, service, direction = OUTGOIN
 }
 
 // TODO: figure out best way to curry fn
-export const getLinkedNodes = vsId => (state, fromNode, service, direction = OUTGOING) => {
-  const vs = getVS(state, { vsId });
-  if (!service) {
-    const allOutgoing = Object.keys(fromNode[direction]).map(service =>
-      getLinkedServiceNodes(vs, fromNode, service, direction)
-    );
-    return [].concat.apply([], allOutgoing);
-  }
-  else return getLinkedServiceNodes(vs, fromNode, service, direction);
-}
-
-// TODO: figure out best way to curry fn (copy of above...)
-export const _getLinkedNodes = (vs, fromNode, service, direction = OUTGOING) => {
+export const getLinkedNodes = (vs, fromNode, service, direction = OUTGOING) => {
   if (!service) {
     const allOutgoing = Object.keys(fromNode[direction]).map(service =>
       getLinkedServiceNodes(vs, fromNode, service, direction)
@@ -100,4 +90,21 @@ export const getEdgeState = (state, props) => {
   const { id, parentId } = props;
   const edgeId = [id, parentId].sort().join('-');
   return getVS(state, props).edges[edgeId];
+}
+
+export const getOrderedChildren = (state, props) => {
+  const { parentId, service } = props;
+  if (!service) console.log(`no service provided for getOrderedChildren for ${ parentId }`);
+  const vs = getVS(state, props);
+  const services = service ? [service] : Object.keys(vs.nodes[parentId].outgoing);
+
+  const orderedEdges = services.map(
+    s => vs.nodes[parentId].outgoing[s].sort(
+      (a, b) => vs.edges[a].data.edge.orderIndex - vs.edges[a].data.edge.orderIndex
+    )
+  );
+
+  const ids = [].concat.apply([], orderedEdges).map(eId => vs.edges[eId].destin);
+
+  return ids;
 }

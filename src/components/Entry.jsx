@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import VSProvider from './vs/VSProvider';
 import VSFind from './vs/VSFind';
+import VSChildren from './vs/VSChildren';
 import ExampleVSEntity from './ExampleVSEntity';
 import EntityChip from './EntityChip';
 
@@ -41,7 +42,7 @@ export default class Entry extends Component {
                   parentId={ fauxPageId }
                 >
                   <Fragment>
-                    <VSFind find={ linkedReports(id) }>
+                    <VSChildren parentId={ id } service="analyticsreports">
                       { ({ results: reports }) => reports.map(rId =>
                         <EntityChip
                           key={ rId }
@@ -51,7 +52,7 @@ export default class Entry extends Component {
                           isLinked={ true }
                         />
                       ) }
-                    </VSFind>
+                    </VSChildren>
                     <VSFind find={ notLinkedReports(id) }>
                       { ({ results: notLinked }) => notLinked.map(rId =>
                         <EntityChip
