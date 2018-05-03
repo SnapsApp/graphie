@@ -33,7 +33,6 @@ class VSChildren extends Component {
   state = { orderedChildren: this.props.results }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    console.log('getting new state', nextProps.results);
     return { orderedChildren: nextProps.results }
   }
 

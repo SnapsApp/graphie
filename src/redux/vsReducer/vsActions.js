@@ -61,6 +61,7 @@ export const updateEdgeToParent = (vsId, parentId, id) => data => Object.assign(
 
 export const updateOrdering = (vsId, parentId) => orderedChildIds => ({
   type: REORDER_CHILDREN,
+  vsId,
   parentId,
   actions: orderedChildIds.map((id, i) =>
     updateEdgeToParent(vsId, parentId, id)({ orderIndex: i })
@@ -128,7 +129,8 @@ const Action = {
 export const Atype = {
   ADD_VS,
   CLEAR_VS,
-  SET_ROOT
+  SET_ROOT,
+  REORDER_CHILDREN
 };
 
 export default Action;
