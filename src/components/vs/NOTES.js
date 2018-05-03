@@ -1,6 +1,12 @@
 /*
+TODO: fix nodereducer... the parent node service is wrong. WRONG
+
 thoughts:
 * when will you have a case of editing multiple entities before clicking save? (rules and rulesets)
+
+* VSChildren ->
+* Entity -> reorderable -> receive reorderOnHover and reorderOnDrop
+
 
 check:
 what gets rerendered when the state changes?

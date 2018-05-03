@@ -5,6 +5,7 @@ const ADD_VS = 'vs/add_vs';
 const CLEAR_VS = 'vs/clear_vs';
 const SET_ROOT = 'vs/set_root';
 const ADD_CHILD = 'vs/add_child';
+const REORDER_CHILDREN = 'vs/reorder_children';
 
 const addVS = (vsId, actions, rootId) => ({
   type: ADD_VS,
@@ -33,6 +34,7 @@ export const updateEntity = (vsId, id) => change => ({
   change,
   updateStatus: 'updated'
 })
+
 export const revertEntity = (vsId, id) => () => ({
   type: gAtype.UPDATE_NODE,
   vsId,
@@ -40,6 +42,7 @@ export const revertEntity = (vsId, id) => () => ({
   change: null,
   updateStatus: 'unchanged'
 })
+
 export const deleteEntity = (vsId, id) => node => Object.assign(gActions.deleteNode({ id }), { vsId });
 
 export const linkEntities = vsId => (parentId, childId, edgeData) =>
@@ -49,11 +52,20 @@ export const linkEntities = vsId => (parentId, childId, edgeData) =>
     origin: parentId,
     destin: childId
   }), { vsId, updateStatus: 'new' });
+
 export const delinkEntities = vsId => (parentId, childId) =>
   Object.assign(gActions.deleteEdge({ id: getEdgeId(parentId, childId) }), { vsId });
+
 export const updateEdgeToParent = (vsId, parentId, id) => data => Object.assign(gActions.updateEdge({ id: getEdgeId(parentId, id), data }),
   { vsId, updateStatus: 'updated' });
 
+export const updateOrdering = (vsId, parentId) => orderedChildIds => ({
+  type: REORDER_CHILDREN,
+  parentId,
+  actions: orderedChildIds.map((id, i) =>
+    updateEdgeToParent(vsId, parentId, id)({ orderIndex: i })
+  )
+});
 
 // export const addChild = (vsId, parentId) => (childId, service, data) => {
 //   const actions = [
@@ -105,6 +117,7 @@ const Action = {
   updateEdgeToParent,
 
   // TODO: test
+  updateOrdering,
   addEntity,
   // addEntityToParent
   clearVS,

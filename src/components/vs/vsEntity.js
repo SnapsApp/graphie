@@ -8,8 +8,6 @@ E.x. use:
   <SUPERCOOLEntity id="necessary" parentId="required_for_edge_functions_to_work" />
 </VSProvider>
 
-where:
-
 SUPERCOOLEntity = vsEntity(SUPERCOOLEntityRendererOrFormOrWhatever)
 */
 

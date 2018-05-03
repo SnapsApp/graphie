@@ -21,6 +21,9 @@ export const getVS = (state, props) =>  {
   return state.vs[vsId];
 }
 
+export const getLinkedServiceEdges = (vs, fromNode, service, direction = OUTGOING) =>
+  fromNode[direction][service].map(id => vs.edges[id]);
+
 export const getLinkedServiceNodes = (vs, fromNode, service, direction = OUTGOING) => {
   const otherNode = EdgeDir[direction].otherNode;
   const edges = fromNode[direction][service] || [];
@@ -96,15 +99,16 @@ export const getOrderedChildren = (state, props) => {
   const { parentId, service } = props;
   if (!service) console.log(`no service provided for getOrderedChildren for ${ parentId }`);
   const vs = getVS(state, props);
-  const services = service ? [service] : Object.keys(vs.nodes[parentId].outgoing);
+  const parentNode = vs.nodes[parentId];
+  const services = service ? [service] : Object.keys(parentNode.outgoing);
 
   const orderedEdges = services.map(
-    s => vs.nodes[parentId].outgoing[s].sort(
-      (a, b) => vs.edges[a].data.edge.orderIndex - vs.edges[a].data.edge.orderIndex
+    s => getLinkedServiceEdges(vs, parentNode, s).sort(
+      (a, b) => a.data.edge.orderIndex - b.data.edge.orderIndex
     )
   );
 
-  const ids = [].concat.apply([], orderedEdges).map(eId => vs.edges[eId].destin);
+  const ids = [].concat.apply([], orderedEdges).map(e => e.destin);
 
   return ids;
 }

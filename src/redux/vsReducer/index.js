@@ -1,7 +1,7 @@
 import { createGraphReducer, createNodesReducer, createEdgesReducer, INIT_STATE, allEdges } from '../graphReducer';
 import { Atype as gAtype, default as gAction } from '../graphReducer/graphActions';
 import { Atype as vsAtype } from './vsActions';
-import { addStandardEdgeData } from './common';
+import { addStandardEdgeData, getLinkedServiceNodes, getEdgeId } from './common';
 
 const INIT_NODE_DATA = {
   entity: undefined,
@@ -35,12 +35,20 @@ const nodeDataReducer = (nData = INIT_NODE_DATA, action) => {
 // TODO: update
 const edgeDataReducer = (eData = INIT_EDGE_DATA, action) => {
   switch (action.type) {
-    case gAtype.ADD_EDGE:
-    case gAtype.UPDATE_EDGE: {
+    case gAtype.ADD_EDGE: {
       const { data, updateStatus } = action;
 
       return {
         edge: data,
+        updateStatus: updateStatus || eData.updateStatus
+      }
+    }
+    case gAtype.UPDATE_EDGE: {
+      const { data, updateStatus } = action;
+      const newEdge = { ...eData.edge, ...data };
+
+      return {
+        edge: newEdge,
         updateStatus: updateStatus || eData.updateStatus
       }
     }
@@ -81,7 +89,7 @@ const vsreducer = (state = {}, action) => {
     }
     case vsAtype.ADD_VS: {
       const { actions = [{}], rootId } = action;
-      const newState = actions.reduce(graphReducer, state[vsId]);
+      const newState = actions.reduce(graphReducer, vs);
       newState.rootId = rootId;
       return Object.assign({}, state, { [vsId]: newState });
     }
@@ -89,6 +97,12 @@ const vsreducer = (state = {}, action) => {
       const { vsId, rootId } = action;
       const newVS = Object.assign({}, state[vsId], { rootId });
       return Object.assign({}, state, { [vsId]: newVS });
+    }
+    case vsAtype.REORDER_CHILDREN: {
+      const { actions = [{}] } = action;
+      const newState = actions.reduce(graphReducer, vs);
+      newState.rootId = vs.rootId;
+      return Object.assign({}, state, { [vsId]: newState });
     }
     case gAtype.ADD_EDGE: {
       const { edgeData, origin, destin } = action;

@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import VSProvider from './vs/VSProvider';
 import VSFind from './vs/VSFind';
-import VSChildren from './vs/VSChildren';
 import ExampleVSEntity from './ExampleVSEntity';
 import EntityChip from './EntityChip';
+
+import VSChildren from './vs/VSChildren'; // are you a drag and drop?
+import VSDraggable from './vs/VSDraggable';
 
 // https://beta.snapsmedia.io/591477753e5c5f06673c7d29/analytics/app/59d3afd032d2f16ca2996bc3/page/59c19f324ca8fc015b183339
 const fauxPageId = '59c19f324ca8fc015b183339';
@@ -26,6 +28,12 @@ const notLinkedReports = (id) => ({
   }
 });
 
+const childrenBox = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'space-around',
+}
+
 export default class Entry extends Component {
   render() {
     return (
@@ -41,16 +49,26 @@ export default class Entry extends Component {
                   id={ id }
                   parentId={ fauxPageId }
                 >
-                  <Fragment>
-                    <VSChildren parentId={ id } service="analyticsreports">
-                      { ({ results: reports }) => reports.map(rId =>
-                        <EntityChip
+                  <div>
+                    <VSChildren
+                      parentId={ id }
+                      service="analyticsreports"
+                      style={ childrenBox }
+                    >
+                      { ({ results: reports, reorder, getIndex }) => reports.map((rId, i) =>
+                        <VSDraggable
                           key={ rId }
                           id={ rId }
-                          background="lavender"
-                          parentId={ id }
-                          isLinked={ true }
-                        />
+                          reorder={ reorder }
+                          getIndex={ getIndex }
+                        >
+                          <EntityChip
+                            id={ rId }
+                            background="lavender"
+                            parentId={ id }
+                            isLinked={ true }
+                          />
+                        </VSDraggable>
                       ) }
                     </VSChildren>
                     <VSFind find={ notLinkedReports(id) }>
@@ -64,7 +82,7 @@ export default class Entry extends Component {
                         />
                       ) }
                     </VSFind>
-                  </Fragment>
+                  </div>
                 </ExampleVSEntity>
               ) }
             </VSFind>

@@ -7,7 +7,6 @@ const chip = (color = 'lavender') => ({
   border: '1px solid black',
   padding: '10px',
   margin: '10px 0',
-  width: '45%',
   wordWrap: 'break-word',
   textAlign: 'left',
   background: color
@@ -37,6 +36,7 @@ class EntityChip extends Component {
   }
 
   render() {
+    console.log('entity chip is rendering')
     const { entity, edgeToParent, background, isLinked, [edgeFormId]: edgeForm } = this.props;
     const { id, name, isHidden, entityType } = entity;
 
