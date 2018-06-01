@@ -1,5 +1,8 @@
 /*
 TODO: fix nodereducer... the parent node service is wrong. WRONG
+TODO: figure out what ^-- means
+TODO: implement api/example for adding/removing/delinking from any part of the tree
+TODO: write up examples
 
 thoughts:
 * when will you have a case of editing multiple entities before clicking save? (rules and rulesets)

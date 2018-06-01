@@ -3,6 +3,7 @@ import VSProvider from './vs/VSProvider';
 import VSFind from './vs/VSFind';
 import ExampleVSEntity from './ExampleVSEntity';
 import EntityChip from './EntityChip';
+import AddMultipleDescendantsExample from './AddMultipleDescendantsExample';
 
 import VSChildren from './vs/VSChildren'; // are you a drag and drop?
 import VSDraggable from './vs/VSDraggable';
@@ -42,6 +43,7 @@ export default class Entry extends Component {
           (!ready || isFetching) ? <div>...loading</div> : (
           <div>
             <h1>loaded: { vsContext.vsId }</h1>
+            <AddMultipleDescendantsExample />
             <VSFind find={ pageSections }>
               { ({ results: sections }) => sections.map(id =>
                 <ExampleVSEntity

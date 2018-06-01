@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import VSContext from './VSContext';
 import { VS_CONTEXT_PROPS } from './VSProvider';
 
-export { VS_CONTEXT_PROPS };
-
 const vsConsumer = Child =>
   class ConnectVSContext extends Component {
     render() {
@@ -16,5 +14,7 @@ const vsConsumer = Child =>
       )
     }
   }
+
+vsConsumer.PROPS = VS_CONTEXT_PROPS;
 
 export default vsConsumer;

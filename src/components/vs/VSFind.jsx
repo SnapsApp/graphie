@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
+import vsConsumer from './vsConsumer';
 import { getIds } from '../../redux/vsReducer/vsGetters';
 
 const mapStateToProps = (state, props) => ({
@@ -16,7 +16,7 @@ const idsHaveChanged = (arr1, arr2) => {
 
 class VSFind extends Component {
   static propTypes = {
-    ...VS_CONTEXT_PROPS,
+    ...vsConsumer.PROPS,
     find: PropTypes.object.isRequired,
     results: PropTypes.array.isRequired
   }

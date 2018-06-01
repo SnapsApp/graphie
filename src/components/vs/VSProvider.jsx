@@ -94,4 +94,6 @@ class VSProvider extends Component {
     )
   }
 }
+VSProvider.PROPS = VS_CONTEXT_PROPS;
+
 export default connect(mapStateToProps, mapDispatchToProps)(VSProvider)

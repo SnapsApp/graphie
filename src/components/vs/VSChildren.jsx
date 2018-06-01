@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
+import vsConsumer from './vsConsumer';
 import { getOrderedChildren } from '../../redux/vsReducer/vsGetters';
 import { updateOrdering } from '../../redux/vsReducer/vsActions';
 import SortEntityDropBox from '../DragAndDrop/SortEntityDropBox';
@@ -23,7 +23,7 @@ const idsHaveChanged = (arr1, arr2) => {
 
 class VSChildren extends Component {
   static propTypes = {
-    ...VS_CONTEXT_PROPS,
+    ...vsConsumer.PROPS,
 
     results: PropTypes.array.isRequired,
     parentId: PropTypes.string.isRequired,

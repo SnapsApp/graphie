@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import vsConsumer, { VS_CONTEXT_PROPS } from './vsConsumer';
+import vsConsumer from './vsConsumer';
 import { updateEntity, revertEntity, deleteEntity, linkEntities, delinkEntities, updateEdgeToParent } from '../../redux/vsReducer/vsActions';
 import { mapEntity, mapEdge } from '../../redux/getters';
 
@@ -36,7 +36,7 @@ export const VS_ENTITY_PROPS = {
   edgeToParent: PropTypes.object,
   apiLink: PropTypes.func.isRequired,
   apiDelink: PropTypes.func.isRequired,
-  ...VS_CONTEXT_PROPS
+  ...vsConsumer.PROPS,
 }
 
 const mapStateToProps = (state, props) => ({
