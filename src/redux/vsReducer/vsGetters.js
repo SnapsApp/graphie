@@ -81,7 +81,24 @@ export const find = vsId => (state, query, fromId) => {
   const startId = fromId || vs.rootId;
   const startNode = vs.nodes[startId];
 
-  return _find(query, [startNode], vs, state.data);
+  let qObj = query;
+  if (typeof query === 'string') {
+    const q = query.split('.').reduce((state, service) => {
+      let { layer, obj } = state;
+      if (!layer) layer = obj;
+
+      layer[service] = {};
+      state.layer = layer[service];
+
+      return state;
+    }, {
+      layer: undefined,
+      obj: {}
+    });
+    qObj = q.obj;
+  }
+
+  return _find(qObj, [startNode], vs, state.data);
 }
 
 export const getIds = vsId => (state, query) =>
