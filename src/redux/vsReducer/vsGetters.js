@@ -1,4 +1,5 @@
 import { getEdgeId } from './common.js';
+import { getEntityData, getEdgeData } from '../dataReducer/dataGetters';
 
 const OUTGOING = 'outgoing';
 const INCOMING = 'incoming';
@@ -129,3 +130,41 @@ export const getOrderedChildren = (state, props) => {
 
   return ids;
 }
+
+export const mapEntity = (state, props) => {
+  const node = getEntityState(state, props);
+  const service = node.nodeType;
+
+  return Object.assign({},
+    getEntityData(state, { service, id: props.id }),
+    node.data.entity
+  );
+}
+
+// TODO: test
+export const mapEdge = (state, props) => {
+  const { parentId, id } = props;
+  const parentProps = Object.assign({}, props, { id: parentId });
+
+  if (!parentId) return;
+
+  const node = getEntityState(state, props);
+  const parentNode = getEntityState(state, parentProps);
+
+  const data = getEdgeData(state, {
+    service: node.nodeType,
+    id,
+    parentId,
+    parentService: parentNode.nodeType
+  });
+
+  const edgeState = getEdgeState(state, props) || {};
+
+  const edge = Object.assign({},
+    data,
+    edgeState.data.edge
+  );
+
+  return edge;
+}
+

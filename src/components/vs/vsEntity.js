@@ -18,7 +18,7 @@ import { bindActionCreators } from 'redux';
 
 import vsConsumer from './vsConsumer';
 import { updateEntity, revertEntity, deleteEntity, linkEntities, delinkEntities, updateEdgeToParent } from '../../redux/vsReducer/vsActions';
-import { mapEntity, mapEdge } from '../../redux/getters';
+import { mapEntity, mapEdge } from '../../redux/vsReducer/vsGetters';
 
 const VS_ENTITY_PROPS = {
   id: PropTypes.string.isRequired,

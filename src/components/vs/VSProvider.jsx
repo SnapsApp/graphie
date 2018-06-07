@@ -46,7 +46,8 @@ class VSProvider extends Component {
   state = {
     ready: false,
     isFetching: false,
-    error: undefined
+    error: undefined,
+    rootId: this.props.rootId
   }
 
   componentDidMount() {

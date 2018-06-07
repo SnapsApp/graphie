@@ -1,19 +1,14 @@
 # How to use VSProvider
-The VSProvider will provide the following props to VSContext.Consumer.
-The component vsConsumer is a convenience HOC that puts these into a prop named 'vsContext.'
+The VSProvider will provide the following props to VSContext.Consumer.<br/>
 (May be out of date, check VSProvider.jsx to be sure.)
 
-```javascript
-{
-  vsId,
-  fetchData,
-  ready,
-  isFetching,
-  error
-}
-```
+* vsId,
+* fetchData - make virtualize structure call,
+* ready - true when all the other props are initialized
+* isFetching
+* error
 
-* Wrap stuff in VSProvider
+### Wrap stuff in VSProvider
 ```jsx
   <VSProvider vsId="myFirstVS" rootId="59c19f324ca8fc015b183339" structure={ someStructure }>
     { ({ ready, isFetching, vsId, fetchData }) => (
@@ -25,10 +20,13 @@ The component vsConsumer is a convenience HOC that puts these into a prop named 
   </VSProvider>
 ```
 
-* Wrap stuff in vsConsumer
+### Wrap stuff in vsConsumer
+The component vsConsumer is a convenience HOC that puts these into a prop named 'vsContext.'<br />
+This render component knows it's vsId.
 ```jsx
 const RenderComponent = ({ vsContext }) => <div>My vsId is { vsContext.vsId }</div>;
-export vsConsumer(RenderComponent);
+const VSConsumerComponent = vsConsumer(RenderComponent);
+export VSConsumerComponent;
 ```
 
 ---
@@ -64,14 +62,14 @@ export vsConsumer(RenderComponent);
 You can query any vs from anywhere (even in components that are outside of a provider) as long as you have the vsID and it's connected to the state.
 
 ## Examples
-* Get all reports
+Get all reports
 ```javascript
 query = 'analyticspages.analyticspagesections.analyticsreports';
 
 const myReports = find(vsId)(state, query, fromId)
 ```
 
-* Get all reports related to my page that are active
+Get all reports related to my page that are active
 ```javascript
 query = {
   analyticspagesections: {
