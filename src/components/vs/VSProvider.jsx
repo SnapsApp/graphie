@@ -18,7 +18,10 @@ const testStyle = {
 export const VS_CONTEXT_PROPS = {
   vsContext: PropTypes.shape({
     vsId: PropTypes.string.isRequired,
-    fetchData: PropTypes.func.isRequired
+    fetchData: PropTypes.func.isRequired,
+    ready: PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    error: PropTypes.any,
   })
 }
 
@@ -41,7 +44,6 @@ class VSProvider extends Component {
   }
 
   state = {
-    vsContext: undefined,
     ready: false,
     isFetching: false,
     error: undefined
@@ -60,11 +62,8 @@ class VSProvider extends Component {
 
   readyVSContext(props) {
     this.setState({
-      // vsContext: {} <-- ready vsContext here
-      vsContext: {
-        vsId: props.vsId,
-        fetchData: this.fetchData(props.structure)
-      },
+      vsId: props.vsId,
+      fetchData: this.fetchData(props.structure),
       ready: true
     });
   }
@@ -86,7 +85,7 @@ class VSProvider extends Component {
 
   render() {
     return (
-      <VSContext.Provider value={ this.state.vsContext }>
+      <VSContext.Provider value={ this.state }>
         <div style={ testStyle }>
         { this.props.children(this.state) }
         </div>

@@ -39,10 +39,10 @@ export default class Entry extends Component {
   render() {
     return (
       <VSProvider vsId="myFirstVS" rootId="59c19f324ca8fc015b183339" structure={ { dun: 'tMAtterRightNow' } } >
-        { ({ ready, isFetching, vsContext }) => (
+        { ({ ready, isFetching, vsId }) => (
           (!ready || isFetching) ? <div>...loading</div> : (
           <div>
-            <h1>loaded: { vsContext.vsId }</h1>
+            <h1>loaded: { vsId }</h1>
             <AddMultipleDescendantsExample />
             <VSFind find={ pageSections }>
               { ({ results: sections }) => sections.map(id =>

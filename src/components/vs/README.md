@@ -1,14 +1,34 @@
-# How to use vsProvider
+# How to use VSProvider
+The VSProvider will provide the following props to VSContext.Consumer.
+The component vsConsumer is a convenience HOC that puts these into a prop named 'vsContext.'
+(May be out of date, check VSProvider.jsx to be sure.)
+
+```javascript
+{
+  vsId,
+  fetchData,
+  ready,
+  isFetching,
+  error
+}
+```
+
 * Wrap stuff in VSProvider
 ```jsx
   <VSProvider vsId="myFirstVS" rootId="59c19f324ca8fc015b183339" structure={ someStructure }>
-    { ({ ready, isFetching, vsContext }) => (
+    { ({ ready, isFetching, vsId, fetchData }) => (
       (!ready || isFetching) ? <div>...loading</div> : (
       <div>
         { Render Some vsConsumer wrapped components here }
       </div>
     )) }
   </VSProvider>
+```
+
+* Wrap stuff in vsConsumer
+```jsx
+const RenderComponent = ({ vsContext }) => <div>My vsId is { vsContext.vsId }</div>;
+export vsConsumer(RenderComponent);
 ```
 
 ---
