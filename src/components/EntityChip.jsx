@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import vsEntity, { VS_ENTITY_PROPS } from './vs/vsEntity';
+import vsEntity from './vs/vsEntity';
 import simpleState from './simpleState';
 
 const chip = (color = 'lavender') => ({
@@ -20,7 +20,7 @@ const propsToForm = ({ edgeToParent = {} }) => {
 
 class EntityChip extends Component {
   static propTypes = {
-    ...VS_ENTITY_PROPS,
+    ...vsEntity.PROPS,
     background: PropTypes.string,
     isLinked: PropTypes.bool,
     linkTo: PropTypes.string

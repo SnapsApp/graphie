@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import vsEntity, { VS_ENTITY_PROPS } from './vs/vsEntity';
+import vsEntity from './vs/vsEntity';
 import simpleState from './simpleState';
 
 const border = {
@@ -32,7 +32,7 @@ const getInitialForm = props => {
 
 class ExampleVSEntity extends Component {
   static propTypes = {
-    ...VS_ENTITY_PROPS
+    ...vsEntity.PROPS
   }
 
   // entity functions

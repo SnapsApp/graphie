@@ -20,7 +20,7 @@ import vsConsumer from './vsConsumer';
 import { updateEntity, revertEntity, deleteEntity, linkEntities, delinkEntities, updateEdgeToParent } from '../../redux/vsReducer/vsActions';
 import { mapEntity, mapEdge } from '../../redux/getters';
 
-export const VS_ENTITY_PROPS = {
+const VS_ENTITY_PROPS = {
   id: PropTypes.string.isRequired,
   parentId: PropTypes.string, // Required for edge functionality
 
@@ -65,6 +65,8 @@ const vsEntity = Child => {
   }
   return vsConsumer(connect(mapStateToProps, mapDispatchToProps)(ConnectVsEntity));
 }
+
+vsEntity.PROPS = VS_ENTITY_PROPS;
 
 export default vsEntity;
 
