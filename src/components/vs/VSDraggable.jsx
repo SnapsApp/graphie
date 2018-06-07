@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import sortEntityDragCard, { SORT_ENTITY_DRAG_CARD_PROPS } from '../DragAndDrop/sortEntityDragCard';
+import sortEntityDragCard from '../DragAndDrop/sortEntityDragCard';
 
 class VSDraggable extends Component {
   static propTypes = {
-    ...SORT_ENTITY_DRAG_CARD_PROPS,
+    ...sortEntityDragCard.PROPS,
 
     id: PropTypes.string.isRequired,
     reorder: PropTypes.func.isRequired,

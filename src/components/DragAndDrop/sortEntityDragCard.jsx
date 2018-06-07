@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { DragSource, DropTarget } from 'react-dnd'
 import ItemTypes from './ItemTypes'
 
-export const SORT_ENTITY_DRAG_CARD_PROPS = {
+const SORT_ENTITY_DRAG_CARD_PROPS = {
   // requires
   id: PropTypes.string.isRequired,
   reorder: PropTypes.func.isRequired,
@@ -58,5 +58,6 @@ const entitySource = [
 ]
 
 const sortEntityDragCard = Child => DropTarget(...entityHoverTarget)(DragSource(...entitySource)(Child))
+sortEntityDragCard.PROPS = SORT_ENTITY_DRAG_CARD_PROPS;
 
 export default sortEntityDragCard;
