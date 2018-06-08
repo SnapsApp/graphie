@@ -29,6 +29,40 @@ const VSConsumerComponent = vsConsumer(RenderComponent);
 export VSConsumerComponent;
 ```
 
+### Find the entity/ies in the vs you want to render/update
+First look for the entity id/s you care about.
+VSFind and VSChildren are built-in ways to find ids (see Api - Components).
+```jsx
+<VSFind find="triggers.rulesets.rules">
+  { ({ results }) => (
+    results.map(id => ...)
+  ) }
+</VSFind>
+```
+
+Then write a component capable of dispatching entity updater actions. The vsEntity HOC is the built-in way to pass entity/edge updater actions to components.
+```
+class Rule extends Component { ... }
+export default vsEntity(Rule)
+```
+
+If you just want to render some entity data, use the mapEntity function in mapStateToProps
+```
+const mapStateToProps = (state, props) => ({ entity: mapEntity(state, props) })
+class Rule extends Component { ... }
+
+export default connect(mapStateToProps)(Rule)
+```
+
+Put 'em together
+```jsx
+<VSFind find="triggers.rulesets.rules">
+  { ({ results }) => (
+    results.map(id => <Rule id={ id } />)
+  ) }
+</VSFind>
+```
+
 ---
 # Render a bunch of sortable/draggable children
 ## VSChildren
@@ -91,5 +125,80 @@ Getter functions that can be used outside of provider
   * array of entities
   * fromId is parentId. defaults to rootId
 
+---
+# Api
+
+## Redux actions - write
+------
+* updateEntity - update self
+* revertEntity - revert changes to self
+* deleteEntity - delete self
+
+* linkEntities - link any two existing entities. linkEntities(parentId, childId, edgeData)
+* delinkEntities - delink any two existing entitties. delinkEntities(parentId, childId)
+
+## Redux getters - read
+------
+* getVS = (state, props) => {}
+  * requires { vsId } or { vsContext } on props
+  * returns the entire vs on the state tree
+* getIds = vsId => (state, query) => []
+  * returns array of ids
+* find = vsId => (state, query, fromId) => []
+  * array of entities
+  * fromId is parentId. defaults to rootId
+* mapEntity = (state, props) => {}
+  * requires { parentId, id, vsId } on props
+  * returns a shallow merge from the entity on vs structure branch to the entity on the data branch
+* mapEdge = (state, props) => {}
+  * requires { parentId, id, vsId } on props
+  * returns a shallow merge from the edge on vs structure branch to the edge on the data branch
+* getOrderedChildren  = (state, props) => []
+  * requires { parentId, service } on props
+  * returns an array of IDS
+
+## Components
+------
+### vsEntity
+Convenient HOC component for retrieving the entity and entity/edge related
+Wrap a component to give it the entity and updater functions.
+
+Entity props:
+* entity - mapEntity
+* apiUpdateEntity - updateEntity
+* apiRevertEntity - revertEntity
+* apiDeleteEntity - deleteEntity
+
+Edge props:
+* edgeToParent - mapEdge
+* apiLink - linkEntities
+* apiDelink - delinkEntities
+
+```jsx
+class EntityUpdater extends Component {
+  //...
+  updateComponent = () => this.props.apiUpdateEntity({ clicked: true });
+  ...
+  render() {
+    return <div onClick={ this.updateComponent }>Set entity clicked to true</div>
+  }
+}
+const Clicker = vsEntity(EntityUpdater)
+```
+
+### VSFind
+Convenience wrapper component for the getIds function.
+```jsx
+<VSFind find={ query }>{ ({ results }) => results }</VSFind>
+```
+
+### VSChildren
+Convenience wrapper component for the getOrderedChildren function.
+```jsx
+<VSChildren parentId={ id } service="analyticsreports">{ ({ results }) => results }</VSChildren>
+```
+
+---
 ## Wishlist
-* be able to query edges
+* be able to filter by edges in query
+
