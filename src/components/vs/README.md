@@ -146,12 +146,35 @@ const myActiveReports = find(vsId)(state, query, fromId)
 # Api
 
 ## Redux actions - write
-* updateEntity - update self
-* revertEntity - revert changes to self
-* deleteEntity - delete self
+Updating VS:
+* addVS = (vsId, actions, rootId)
+  * adds empty vs to redux state tree and applies actions
+* populateVS = (vsId, response)
+  * parses the virtualize structure response and calls addVS
+* setRoot = vsId => root
+  * updates rootId of the vs
 
-* linkEntities - link any two existing entities. linkEntities(parentId, childId, edgeData)
-* delinkEntities - delink any two existing entitties. delinkEntities(parentId, childId)
+Updating Entity:
+* initEntity = vsId => ({ id, data, nodeType, incoming, outgoing })
+  * adds existing entities (from the endpoint response) to the vs
+  * specifically, adds an entity to the vs with the update status 'unchanged'
+* updateEntity = (vsId, id) => updateObj
+  * updates the entity data with updateObj
+* revertEntity = (vsId, id) => ()
+  * undo all edits to the entity
+* deleteEntity = (vsId, id) => ()
+  * moves entity and related edges to the delete branch of the vs state
+
+Updating an edge:
+* initLink = vsId => ({ id, data, origin, destin })
+  * adds existing edges (from the endpoint response) to the vs
+  * specifically, adds an edge to the vs with the update status 'unchanged'
+* linkEntities = vsId => (parentId, childId, edgeData)
+  * adds a new edge to the vs
+* delinkEntities = vsId => (parentId, childId)
+  * delinked entities
+* updateEdgeToParent = (vsId, parentId, id) => data =>
+  * updates edge between parentId and id with data
 
 ## Redux getters - read
 * getVS = (state, props) => {}
