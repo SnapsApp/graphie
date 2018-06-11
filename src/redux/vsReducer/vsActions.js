@@ -43,7 +43,7 @@ export const revertEntity = (vsId, id) => () => ({
   updateStatus: 'unchanged'
 })
 
-export const deleteEntity = (vsId, id) => node => Object.assign(gActions.deleteNode({ id }), { vsId });
+export const deleteEntity = (vsId, id) => () => Object.assign(gActions.deleteNode({ id }), { vsId });
 
 export const linkEntities = vsId => (parentId, childId, edgeData) =>
   Object.assign(gActions.addEdge({
