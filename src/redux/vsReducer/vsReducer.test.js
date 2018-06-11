@@ -35,6 +35,10 @@ describe('vs reducer', () => {
 
     expect(populatedVS).toEqual({
       [vsId]: {
+        deleted: {
+          nodes: {},
+          edges: {}
+        },
         nodes: {
           [node.id]: expectedNode
         },
@@ -55,6 +59,10 @@ describe('vs reducer', () => {
 
     expect(populatedVS).toEqual({
       [vsId]: {
+        deleted: {
+          nodes: {},
+          edges: {}
+        },
         nodes: {
           [node.id]: expectedNode
         },
