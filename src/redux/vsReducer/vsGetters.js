@@ -237,7 +237,7 @@ export class StructureGrapher {
       const service = nodes[id].nodeType;
       const entity = this.dataState[service][id];
 
-      const newEntity = Object.assign({}, changes, entity);
+      const newEntity = Object.assign({}, entity, changes);
       const { edges: newEdges, hasUpdatedEdges } = StructureGrapher.getEdgesForId(this.edgesMap, id);
 
       newEntity.edges = Object.assign(newEntity.edges, newEdges);
