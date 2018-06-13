@@ -215,10 +215,11 @@ export class StructureGrapher {
     hasUpdatedEdges: false
   })
 
-  constructor(structure, vsState, dataState) {
-    this.initState(structure, vsState, dataState);
+  constructor(...args) {
+    this.initState(...args);
   }
-  initState(structure, vsState, dataState) {
+  initState(structure, vsState, dataState, orgId) {
+    this.orgId = orgId;
     this.structure = structure;
     this.vsState = vsState;
     this.dataState = dataState;
@@ -226,7 +227,7 @@ export class StructureGrapher {
     this.entitiesMap = this.makeEntitiesMap(this.vsState.nodes, this.dataState);
   }
   updateState(reduxState, props) {
-    this.initState(this.structure, reduxState, props);
+    this.initState(this.structure, reduxState, props, this.orgId);
   }
 
   makeEntitiesMap() {
@@ -317,7 +318,7 @@ export class StructureGrapher {
     const state = this.createStructureState();
     const delinks = this.createDelinksArray();
     return {
-      orgId: undefined,
+      orgId: this.orgId,
       structure: this.structure,
       state,
       delinks

@@ -94,13 +94,19 @@ describe('vs reducer', () => {
     const populatedState = vsReducer(undefined, Action.populateVS(vsId, resp));
     const dataState = dataReducer(undefined, addToDataBranch(resp));
 
-    const grapher = new StructureGrapher(graphTestData.structure, populatedState[vsId], dataState);
-    const postBody = grapher.getPostBody();
+    const grapher = new StructureGrapher(graphTestData.structure, populatedState[vsId], dataState, "5ad8bd24c571e541973cd927");
+    const {
+      orgId,
+      state,
+      structure,
+      delinks } = grapher.getPostBody();
 
-    const { nodes, edges, rootId } = parseVSdata(resp);
+    const expected = graphTestData.graphPostBody
 
-    expect(postBody.state).toEqual(graphTestData.graphPostBody.state);
-    // expect(delinks).toEqual([]);
+    expect(state).toEqual(expected.state);
+    expect(delinks).toEqual(expected.delinks);
+    expect(orgId).toEqual(expected.orgId);
+    expect(structure).toEqual(expected.structure);
   });
 })
 
