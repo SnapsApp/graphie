@@ -223,11 +223,11 @@ export class StructureGrapher {
     this.structure = structure;
     this.vsState = vsState;
     this.dataState = dataState;
-    this.edgesMap = StructureGrapher.idToEdgesMap(this.vsState.edges);
-    this.entitiesMap = this.makeEntitiesMap(this.vsState.nodes, this.dataState);
+    this.edgesMap = StructureGrapher.idToEdgesMap(vsState.edges);
+    this.entitiesMap = this.makeEntitiesMap(vsState.nodes, dataState);
   }
-  updateState(reduxState, props) {
-    this.initState(this.structure, reduxState, props, this.orgId);
+  updateState(vsState) {
+    this.initState(this.structure, vsState, this.dataState, this.orgId);
   }
 
   makeEntitiesMap() {
