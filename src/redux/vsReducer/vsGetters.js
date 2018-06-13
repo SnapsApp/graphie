@@ -189,11 +189,11 @@ export class StructureGrapher {
     if (!map[parentId]) map[parentId] = [];
 
     map[childId].push({
-      data: Object.assign({}, edge, { relation: 'object' }),
+      data: Object.assign({}, edge, { relation: 'subject' }),
       updateStatus
     });
     map[parentId].push({
-      data: Object.assign({}, edge, { relation: 'subject' }),
+      data: Object.assign({}, edge, { relation: 'object' }),
       updateStatus
     });
     return map;
@@ -255,26 +255,6 @@ export class StructureGrapher {
   }
 
   createStructureState() {
-    const edgesMap = StructureGrapher.idToEdgesMap(this.vsState.edges);
-
-    const entitiesMap = Object.keys(this.vsState.nodes).reduce((map, id) => {
-      const { entity: changes, updateStatus } = this.vsState.nodes[id].data;
-      const service = this.vsState.nodes[id].nodeType;
-      const entity = this.dataState[service][id];
-
-      const newEntity = Object.assign({}, changes, entity);
-      const { edges: newEdges, hasUpdatedEdges } = StructureGrapher.getEdgesForId(edgesMap, id);
-
-      newEntity.edges = Object.assign(newEntity.edges, newEdges);
-
-      if (updateStatus === 'new') newEntity.method = 'POST';
-      if (hasUpdatedEdges && updateStatus === 'updated') newEntity.method = 'PATCH';
-
-      map[id] = newEntity;
-      return map;
-    }, {}); // { [id]: entity }
-
-    // generate rootId
     const rootId = this.vsState.rootId;
     const rootNode = this.vsState.nodes[rootId];
     const rootService = rootNode.nodeType;

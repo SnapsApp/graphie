@@ -138,6 +138,9 @@ describe('serialize for graph', () => {
     expect(orgId).toEqual(expected.orgId);
     expect(structure).toEqual(expected.structure);
   });
+  it('should have the correct post body after updating an edge', () => {
+
+  });
   it('should have the correct post body after adding a new entity', () => {
 
   });
