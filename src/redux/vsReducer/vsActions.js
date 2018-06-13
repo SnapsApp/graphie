@@ -116,14 +116,15 @@ const Action = {
   linkEntities,
   delinkEntities,
   updateEdgeToParent,
+  updateOrdering,
 
   // TODO: test
-  updateOrdering,
   addEntity,
-  // addEntityToParent
+  // addEntityToParent ?
   clearVS,
 
-  // revertLink?
+  // revertLink ?
+  // graph ?
 };
 
 export const Atype = {

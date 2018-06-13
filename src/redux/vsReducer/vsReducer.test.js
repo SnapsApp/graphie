@@ -1,9 +1,17 @@
 import expect from 'expect';
 import vsReducer from './index';
 import Action from './vsActions';
-import { find } from './vsGetters';
+import { find, StructureGrapher } from './vsGetters';
+import dataReducer, { addToDataBranch } from '../dataReducer';
 
-import { testResponse, parseVSdata, testEntities, makeNode, expectNode } from './common'
+import {
+  testStructure,
+  testResponse,
+  graphTestData,
+  parseVSdata,
+  testEntities,
+  makeNode,
+  expectNode } from './common'
 
 describe('vs reducer', () => {
   it('should initialize as an empty object', () => {
@@ -78,6 +86,21 @@ describe('vs reducer', () => {
     expect(Object.keys(nodes).length).toEqual(20);
     expect(rootId).toEqual("59c19f324ca8fc015b183339");
     expect(Object.keys(edges).length).toEqual(19);
+  });
+
+  it('should be able to create structure/graph post body', () => {
+    const vsId = 'asdflkj';
+    const resp = graphTestData.virtualizeResp;
+    const populatedState = vsReducer(undefined, Action.populateVS(vsId, resp));
+    const dataState = dataReducer(undefined, addToDataBranch(resp));
+
+    const grapher = new StructureGrapher(graphTestData.structure, populatedState[vsId], dataState);
+    const postBody = grapher.getPostBody();
+
+    const { nodes, edges, rootId } = parseVSdata(resp);
+
+    expect(postBody.state).toEqual(graphTestData.graphPostBody.state);
+    // expect(delinks).toEqual([]);
   });
 })
 

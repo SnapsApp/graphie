@@ -154,7 +154,7 @@ Updating VS:
 * setRoot = vsId => root
   * updates rootId of the vs
 
-Updating Entity:
+Updating Entities:
 * initEntity = vsId => ({ id, data, nodeType, incoming, outgoing })
   * adds existing entities (from the endpoint response) to the vs
   * specifically, adds an entity to the vs with the update status 'unchanged'
@@ -165,7 +165,7 @@ Updating Entity:
 * deleteEntity = (vsId, id) => ()
   * moves entity and related edges to the delete branch of the vs state
 
-Updating an edge:
+Updating Edges:
 * initLink = vsId => ({ id, data, origin, destin })
   * adds existing edges (from the endpoint response) to the vs
   * specifically, adds an edge to the vs with the update status 'unchanged'
@@ -175,6 +175,9 @@ Updating an edge:
   * delinked entities
 * updateEdgeToParent = (vsId, parentId, id) => data =>
   * updates edge between parentId and id with data
+* updateOrdering = (vsId, parentId) => orderedChildIdsArray
+  * updates the edges of the children to the parentId based on their order in the array
+
 
 ## Redux getters - read
 * getVS = (state, props) => {}

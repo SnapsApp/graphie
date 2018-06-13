@@ -168,3 +168,160 @@ export const mapEdge = (state, props) => {
   return edge;
 }
 
+// structure graphing
+export const graph = structure => (s, props) => {
+  const vsState = getVS(s, props);
+  const dataState = s.data;
+  const grapher = new StructureGrapher(structure, vsState, dataState);
+  return grapher.getPostBody();
+}
+
+export class StructureGrapher {
+  static makeDelink = (pService, parentId, cService, childId) =>
+  `${ pService }/${ parentId }/delinks/${ cService }/${ childId }`
+
+  static idToEdgesMap = edgesState => Object.keys(edgesState).reduce((map, edgeKey) => {
+    const { edge, updateStatus } = edgesState[edgeKey].data;
+    const childId = edge.childId;
+    const parentId = edge.parentId;
+
+    if (!map[childId]) map[childId] = [];
+    if (!map[parentId]) map[parentId] = [];
+
+    map[childId].push({
+      data: Object.assign({}, edge, { relation: 'object' }),
+      updateStatus
+    });
+    map[parentId].push({
+      data: Object.assign({}, edge, { relation: 'subject' }),
+      updateStatus
+    });
+    return map;
+  }, {}) // { [id]: { data, updateStatus } };
+
+  static getEdgesForId = (edgeMap, id) => edgeMap[id].reduce((acc, edge) => {
+    const { data } = edge;
+    const isChild = data.childId === id;
+    const service = isChild ? data.childService : data.parentService;
+
+    acc.hasUpdatedEdges = acc.hasUpdatedEdges || edge.updateStatus === 'updated';
+    if (!acc[service]) acc[service] = { edges: {} };
+
+    acc[service].edges[id] = data;
+
+    return acc;
+  }, {
+    edges: {}, // { service: { edges { [id]: edgeData } } }
+    hasUpdatedEdges: false
+  })
+
+  constructor(structure, vsState, dataState) {
+    this.initState(structure, vsState, dataState);
+  }
+  initState(structure, vsState, dataState) {
+    this.structure = structure;
+    this.vsState = vsState;
+    this.dataState = dataState;
+    this.edgesMap = StructureGrapher.idToEdgesMap(this.vsState.edges);
+    this.entitiesMap = this.makeEntitiesMap(this.vsState.nodes, this.dataState);
+  }
+  updateState(reduxState, props) {
+    this.initState(this.structure, reduxState, props);
+  }
+
+  makeEntitiesMap() {
+    const nodes = this.vsState.nodes;
+    return Object.keys(nodes).reduce((map, id) => {
+      const { entity: changes, updateStatus } = nodes[id].data;
+      const service = nodes[id].nodeType;
+      const entity = this.dataState[service][id];
+
+      const newEntity = Object.assign({}, changes, entity);
+      const { edges: newEdges, hasUpdatedEdges } = StructureGrapher.getEdgesForId(this.edgesMap, id);
+
+      newEntity.edges = Object.assign(newEntity.edges, newEdges);
+
+      if (updateStatus === 'new') newEntity.method = 'POST';
+      if (hasUpdatedEdges && updateStatus === 'updated') newEntity.method = 'PATCH';
+
+      map[id] = newEntity;
+      return map;
+    }, {}) // { [id]: entity }
+  }
+
+  getEntity(id) {
+    return this.entitiesMap[id];
+  }
+
+  createStructureState() {
+    const edgesMap = StructureGrapher.idToEdgesMap(this.vsState.edges);
+
+    const entitiesMap = Object.keys(this.vsState.nodes).reduce((map, id) => {
+      const { entity: changes, updateStatus } = this.vsState.nodes[id].data;
+      const service = this.vsState.nodes[id].nodeType;
+      const entity = this.dataState[service][id];
+
+      const newEntity = Object.assign({}, changes, entity);
+      const { edges: newEdges, hasUpdatedEdges } = StructureGrapher.getEdgesForId(edgesMap, id);
+
+      newEntity.edges = Object.assign(newEntity.edges, newEdges);
+
+      if (updateStatus === 'new') newEntity.method = 'POST';
+      if (hasUpdatedEdges && updateStatus === 'updated') newEntity.method = 'PATCH';
+
+      map[id] = newEntity;
+      return map;
+    }, {}); // { [id]: entity }
+
+    // generate rootId
+    const rootId = this.vsState.rootId;
+    const rootNode = this.vsState.nodes[rootId];
+    const rootService = rootNode.nodeType;
+
+    const structureState = {
+      [rootService]: this.structureFromState(this.structure[rootService], [this.getEntity(rootId)])
+    }
+
+    return structureState;
+  }
+
+  createDelinksArray = () => {
+    return [];
+  }
+
+  structureFromState(structureLayer, data) {
+    const services = Object.keys(structureLayer).filter(s => s !== 'data');
+    if (!services.length) return { data };
+    else {
+      const childrenData = this.getChildrenForServices(data, services);
+      return services.reduce((acc, service) => {
+        acc[service] = this.structureFromState(structureLayer[service], childrenData[service]);
+        return acc;
+      }, { data });
+    }
+  }
+
+  getChildrenForServices (parentEntities, services) {
+    const vs = this.vsState;
+    return services.reduce((acc, service) => {
+      acc[service] = [].concat.apply([], parentEntities.map((parent) =>
+        getLinkedServiceNodes(vs, vs.nodes[parent.id], service)
+      ))
+      .map(n => this.getEntity(n.id));
+
+      return acc;
+    }, {});
+  }
+
+  getPostBody() {
+    const state = this.createStructureState();
+    const delinks = this.createDelinksArray();
+    return {
+      orgId: undefined,
+      structure: this.structure,
+      state,
+      delinks
+    }
+  }
+
+}
