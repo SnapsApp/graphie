@@ -112,36 +112,53 @@ describe('serialize for graph', () => {
     expect(structure).toEqual(expected.structure);
   });
 
-  it('should have the correct post body after updating an entity', () => {
-    const updateRule1 = Action.updateEntity(vsId, "5b1eac9e7157989575bd7cbb")({
-      resourceId: "change1",
-      resourceName: "change1",
-    })
-    const updateRule2 = Action.updateEntity(vsId, "5b1eb16e7157989575bd7cbf")({
-      resourceId: "change2",
-      resourceName: "change2",
-    })
+  // it('should have the correct post body after updating an entity', () => {
+  //   const updateRule1 = Action.updateEntity(vsId, "5b1eac9e7157989575bd7cbb")({
+  //     resourceId: "change1",
+  //     resourceName: "change1",
+  //   })
+  //   const updateRule2 = Action.updateEntity(vsId, "5b1eb16e7157989575bd7cbf")({
+  //     resourceId: "change2",
+  //     resourceName: "change2",
+  //   })
 
-    const updatedVSState = [updateRule1, updateRule2].reduce(vsReducer, populatedState);
+  //   const updatedVSState = [updateRule1, updateRule2].reduce(vsReducer, populatedState);
 
-    grapher.updateState(updatedVSState[vsId]);
-    const {
-      orgId,
-      state,
-      structure,
-      delinks } = grapher.getPostBody();
+  //   grapher.updateState(updatedVSState[vsId]);
+  //   const {
+  //     orgId,
+  //     state,
+  //     structure,
+  //     delinks } = grapher.getPostBody();
 
-    const expected = graphTestData.graphPostBodyAfterRuleUpdates;
+  //   const expected = graphTestData.graphPostBodyAfterRuleUpdates;
 
-    expect(state).toEqual(expected.state);
-    expect(delinks).toEqual(expected.delinks);
-    expect(orgId).toEqual(expected.orgId);
-    expect(structure).toEqual(expected.structure);
+  //   expect(state).toEqual(expected.state);
+  //   expect(delinks).toEqual(expected.delinks);
+  //   expect(orgId).toEqual(expected.orgId);
+  //   expect(structure).toEqual(expected.structure);
+  // });
+  it('should have the correct post body after adding a new entity', () => {
+    // const addRuleEntity = Action.updateEntity(vsId, "5b1eac9e7157989575bd7cbb")({
+
+
+    // const updatedVSState = [addRuleEntity].reduce(vsReducer, populatedState);
+
+    // grapher.updateState(updatedVSState[vsId]);
+    // const {
+    //   orgId,
+    //   state,
+    //   structure,
+    //   delinks } = grapher.getPostBody();
+
+    // const expected = graphTestData.graphPostBodyAfterAddedRule;
+
+    // expect(state).toEqual(expected.state);
+    // expect(delinks).toEqual(expected.delinks);
+    // expect(orgId).toEqual(expected.orgId);
+    // expect(structure).toEqual(expected.structure);
   });
   it('should have the correct post body after updating an edge', () => {
-
-  });
-  it('should have the correct post body after adding a new entity', () => {
 
   });
   it('should have the correct post body after delinking an entity', () => {

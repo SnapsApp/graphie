@@ -15,6 +15,360 @@ export const testStructure = {
   }
 }
 
+export const testSchemas = [{
+  "href": "https://snapsmedia.io/api/analyticspages/create",
+  "service": "analyticspages",
+  "action": "create",
+  "method": "POST",
+  "description": "",
+  "headers": {
+    "Content-Type": "application/json; charset=utf-8",
+    "Authorization": "Basic Auth"
+  },
+  "supports": [],
+  "policies": [
+    "hasAppScope"
+  ],
+  "contractAttributes": {
+    "id": {
+      "type": "string"
+    },
+    "appId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "displayIcon": {
+      "type": "string",
+      "required": true,
+      "defaultsTo": "ion-ionic"
+    },
+    "detailType": {
+      "type": "string",
+      "in": [
+        "referrals",
+        "appUsers",
+        "states"
+      ]
+    },
+    "active": {
+      "type": "boolean",
+      "transform": "booleanize",
+      "defaultsTo": false
+    },
+    "blacklistUsers": {
+      "type": "array",
+      "description": "A list of Snaps user IDs to hide this report for."
+    }
+  },
+  "expectHttpStatus": "201",
+  "handleHttpStatus": [
+    400,
+    401,
+    403,
+    404,
+    409,
+    422,
+    429,
+    500
+  ],
+  "requestBodyExamples": [],
+  "responseBodyExamples": [],
+  "X-Response-Headers": [],
+  "public": false,
+  "edgeDefinitions": {},
+  "after": [],
+  "before": [],
+  "rlock": false,
+  "rlockinfo": {},
+  "relations": [
+    "analyticspagesections",
+    "analyticspages"
+  ]
+}, {
+  "href": "https://snapsmedia.io/api/analyticspagesections/create",
+  "service": "analyticspagesections",
+  "action": "create",
+  "method": "POST",
+  "description": "",
+  "headers": {
+    "Content-Type": "application/json; charset=utf-8",
+    "Authorization": "Basic Auth"
+  },
+  "supports": [],
+  "policies": [
+    "hasOrgScope"
+  ],
+  "contractAttributes": {
+    "id": {
+      "type": "string"
+    },
+    "orgId": {
+      "type": "string",
+      "required": "string"
+    },
+    "appId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "defaultsTo": ""
+    },
+    "isHidden": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    },
+    "active": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    },
+    "periodTextOverride": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    },
+    "component": {
+      "type": "string",
+      "defaultsTo": "",
+      "description": "UI component. Component and componentService will indicate what service is displayed with the related entities"
+    },
+    "componentService": {
+      "type": "string",
+      "defaultsTo": "",
+      "description": "API service to inform the component which data to populate with"
+    },
+    "classes": {
+      "type": "string",
+      "defaultsTo": "col-24",
+      "description": "Any additional classes to apply to the analytics section, i.e. col-12"
+    }
+  },
+  "expectHttpStatus": "201",
+  "handleHttpStatus": [
+    400,
+    401,
+    403,
+    404,
+    409,
+    422,
+    429,
+    500,
+    503,
+    504
+  ],
+  "requestBodyExamples": [],
+  "responseBodyExamples": [],
+  "X-Response-Headers": [],
+  "public": true,
+  "edgeDefinitions": {},
+  "after": [],
+  "before": [],
+  "rlock": false,
+  "rlockinfo": {},
+  "relations": [
+    "analyticsreports"
+  ]
+}, {
+  "href": "https://snapsmedia.io/api/analyticsreports/create",
+  "service": "analyticsreports",
+  "action": "create",
+  "method": "POST",
+  "description": "",
+  "headers": {
+    "Content-Type": "application/json; charset=utf-8",
+    "Authorization": "Basic Auth"
+  },
+  "supports": [],
+  "policies": [
+    "hasAppScope"
+  ],
+  "contractAttributes": {
+    "id": {
+      "type": "string"
+    },
+    "orgId": {
+      "type": "string"
+    },
+    "appId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "defaultsTo": ""
+    },
+    "classes": {
+      "type": "string",
+      "required": "",
+      "defaultsTo": "col-8"
+    },
+    "height": {
+      "type": "string"
+    },
+    "component": {
+      "type": "string",
+      "required": true,
+      "description": "TimeSeries - line chart. Segmentation - pie or bar. Numbers - data from endpoint should specify type to display"
+    },
+    "facet": {
+      "type": "string",
+      "defaultsTo": "",
+      "description": "the api endpoint or facet associated with this report"
+    },
+    "acceptsSegmentation": {
+      "type": "boolean",
+      "required": true,
+      "transform": "booleanize"
+    },
+    "acceptsDateRange": {
+      "type": "boolean",
+      "required": true,
+      "transform": "booleanize"
+    },
+    "includesTrendData": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    },
+    "active": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    },
+    "hasUniqueToggle": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    },
+    "hasFilter": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    },
+    "tooltip": {
+      "type": "string"
+    },
+    "customQuery": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object"
+    },
+    "blacklistUsers": {
+      "type": "array",
+      "description": "A list of Snaps user IDs to hide this report for."
+    },
+    "forceNoCache": {
+      "type": "boolean",
+      "defaultsTo": false,
+      "transform": "booleanize"
+    }
+  },
+  "expectHttpStatus": "201",
+  "handleHttpStatus": [
+    400,
+    401,
+    403,
+    404,
+    409,
+    422,
+    429,
+    500
+  ],
+  "requestBodyExamples": [],
+  "responseBodyExamples": [],
+  "X-Response-Headers": [],
+  "public": false,
+  "edgeDefinitions": {},
+  "after": [],
+  "before": [],
+  "rlock": false,
+  "rlockinfo": {},
+  "relations": [
+    "scripts"
+  ]
+}, {
+  "href": "https://snapsmedia.io/api/scripts/create",
+  "service": "scripts",
+  "action": "create",
+  "method": "POST",
+  "description": "",
+  "headers": {
+    "Content-Type": "application/json; charset=utf-8",
+    "Authorization": "Basic Auth"
+  },
+  "supports": [],
+  "policies": [
+    "hasOrgScope"
+  ],
+  "contractAttributes": {
+    "id": {
+      "type": "string"
+    },
+    "orgId": {
+      "type": "string",
+      "required": true
+    },
+    "appId": {
+      "type": "string"
+    },
+    "script": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "scriptType": {
+      "type": "string",
+      "in": [
+        "analytics",
+        "bot"
+      ],
+      "defaultsTo": ""
+    }
+  },
+  "expectHttpStatus": "201",
+  "handleHttpStatus": [
+    400,
+    401,
+    403,
+    404,
+    409,
+    422,
+    429,
+    500,
+    503,
+    504
+  ],
+  "requestBodyExamples": [],
+  "responseBodyExamples": [],
+  "X-Response-Headers": [],
+  "public": true,
+  "edgeDefinitions": {},
+  "after": [
+    "commitScriptFile"
+  ],
+  "before": [],
+  "rlock": false,
+  "rlockinfo": {},
+  "relations": [
+    "apps",
+    "bots",
+    "stategroups",
+    "states",
+    "triggers"
+  ]
+}]
+
 export const testResponse = {
   "analyticspages": {
     "data": [{ "displayIcon": "ion-ionic", "name": "Overview", "links": { "analyticspagesections": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "analyticspages": [] }, "createdAt": "2017-09-19T22:50:30.844Z", "updatedAt": "2018-04-16T22:01:25.603Z", "clonedNodes": ["59ea840f2ce566334fcd15b6", "59ea847f05e7004800610585"], "active": true, "id": "59c19f324ca8fc015b183339", "apiStatus": "200", "apiMessage": "OK", "entityType": "analyticspages", "href": "https://snapsmedia.io/api/analyticspages/59c19f324ca8fc015b183339", "edges": { "analyticspagesections": { "edges": { "59c2cd714d834683e2ed71fe": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cd714d834683e2ed71fe", "orderIndex": 0 }, "59c2cd8a4d834683e2ed71ff": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cd8a4d834683e2ed71ff", "orderIndex": 2 }, "59c2cdb04d834683e2ed7200": { "relation": "object", "parentService": "analyticspages", "parentId": "59c19f324ca8fc015b183339", "childService": "analyticspagesections", "childId": "59c2cdb04d834683e2ed7200", "orderIndex": 4 } }, "maps": { "parentService": { "59c2cd714d834683e2ed71fe": "analyticspages", "59c2cd8a4d834683e2ed71ff": "analyticspages", "59c2cdb04d834683e2ed7200": "analyticspages" }, "parentId": { "59c2cd714d834683e2ed71fe": "59c19f324ca8fc015b183339", "59c2cd8a4d834683e2ed71ff": "59c19f324ca8fc015b183339", "59c2cdb04d834683e2ed7200": "59c19f324ca8fc015b183339" }, "childService": { "59c2cd714d834683e2ed71fe": "analyticspagesections", "59c2cd8a4d834683e2ed71ff": "analyticspagesections", "59c2cdb04d834683e2ed7200": "analyticspagesections" }, "childId": { "59c2cd714d834683e2ed71fe": "59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff": "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200": "59c2cdb04d834683e2ed7200" }, "orderIndex": { "59c2cd714d834683e2ed71fe": 0, "59c2cd8a4d834683e2ed71ff": 2, "59c2cdb04d834683e2ed7200": 4 }, "relation": { "59c2cd714d834683e2ed71fe": "object", "59c2cd8a4d834683e2ed71ff": "object", "59c2cdb04d834683e2ed7200": "object" } }, "indexes": { "parentService": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "parentId": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "childService": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "childId": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "orderIndex": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"], "relation": ["59c2cd714d834683e2ed71fe", "59c2cd8a4d834683e2ed71ff", "59c2cdb04d834683e2ed7200"] } } } }],
@@ -705,6 +1059,7 @@ export const graphTestData = {
     "structure": { "triggers": { "data": [], "apps": { "data": [] }, "rules": { "data": [] }, "rulesets": { "data": [], "rules": { "data": [] }, "rulesets": { "data": [], "rules": { "data": [] } } } } },
     "delinks": []
   },
+  graphPostBodyAfterAddedRule: {"orgId":"596933b574c85341deac27b2","state":{"triggers":{"data":[{"pushStateId":"5aeca1aa2c08514813a1f6d8","secondsFromNow":82800,"description":"testing linked scripts","frequency":"hours","isRulesEng":true,"active":false,"production":true,"staging":true,"triggerSentence":" When users have   transitioned to block named Catch All Block","triggerEvents":[],"name":"Trigger linked with script ","orgId":"596933b574c85341deac27b2","eventName":"stateChanged","performAction":"runScript","actionOptions":"","links":{"rulesets":["5b0344ca56ff028430e91fb3"],"apps":["5ad4e2e2aff5b620a241d8ce"],"rules":["5b0344ca56ff028430e91fb2"],"scripts":["5b0343afafd8771ee78f7028"]},"createdAt":"2018-05-21T22:15:34.727Z","updatedAt":"2018-06-08T18:51:30.393Z","id":"5b0344ca56ff028430e91fb1","apiStatus":"200","apiMessage":"OK","entityType":"triggers","href":"https://antares-aptible.snapsmedia.io/api/triggers/5b0344ca56ff028430e91fb1","edges":{"rulesets":{"edges":{"5b0344ca56ff028430e91fb3":{"parentService":"triggers","parentId":"5b0344ca56ff028430e91fb1","childService":"rulesets","childId":"5b0344ca56ff028430e91fb3","relation":"object","orderIndex":0}},"maps":{"parentService":{"5b0344ca56ff028430e91fb3":"triggers"},"parentId":{"5b0344ca56ff028430e91fb3":"5b0344ca56ff028430e91fb1"},"childService":{"5b0344ca56ff028430e91fb3":"rulesets"},"childId":{"5b0344ca56ff028430e91fb3":"5b0344ca56ff028430e91fb3"},"orderIndex":{"5b0344ca56ff028430e91fb3":0},"relation":{"5b0344ca56ff028430e91fb3":"object"}},"indexes":{"parentService":["5b0344ca56ff028430e91fb3"],"parentId":["5b0344ca56ff028430e91fb3"],"childService":["5b0344ca56ff028430e91fb3"],"childId":["5b0344ca56ff028430e91fb3"],"orderIndex":["5b0344ca56ff028430e91fb3"],"relation":["5b0344ca56ff028430e91fb3"]}},"rules":{"edges":{"5b0344ca56ff028430e91fb2":{"parentService":"triggers","parentId":"5b0344ca56ff028430e91fb1","childService":"rules","childId":"5b0344ca56ff028430e91fb2","relation":"object","orderIndex":0}},"maps":{"parentService":{"5b0344ca56ff028430e91fb2":"triggers"},"parentId":{"5b0344ca56ff028430e91fb2":"5b0344ca56ff028430e91fb1"},"childService":{"5b0344ca56ff028430e91fb2":"rules"},"childId":{"5b0344ca56ff028430e91fb2":"5b0344ca56ff028430e91fb2"},"orderIndex":{"5b0344ca56ff028430e91fb2":0},"relation":{"5b0344ca56ff028430e91fb2":"object"}},"indexes":{"parentService":["5b0344ca56ff028430e91fb2","5b0344ca56ff028430e91fb2"],"parentId":["5b0344ca56ff028430e91fb2","5b0344ca56ff028430e91fb2"],"childService":["5b0344ca56ff028430e91fb2","5b0344ca56ff028430e91fb2"],"childId":["5b0344ca56ff028430e91fb2","5b0344ca56ff028430e91fb2"],"orderIndex":["5b0344ca56ff028430e91fb2","5b0344ca56ff028430e91fb2"],"relation":["5b0344ca56ff028430e91fb2","5b0344ca56ff028430e91fb2"]}},"apps":{"edges":{"5ad4e2e2aff5b620a241d8ce":{"parentService":"triggers","parentId":"5b0344ca56ff028430e91fb1","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","relation":"object","orderIndex":0}},"maps":{"parentService":{"5ad4e2e2aff5b620a241d8ce":"triggers"},"parentId":{"5ad4e2e2aff5b620a241d8ce":"5b0344ca56ff028430e91fb1"},"childService":{"5ad4e2e2aff5b620a241d8ce":"apps"},"childId":{"5ad4e2e2aff5b620a241d8ce":"5ad4e2e2aff5b620a241d8ce"},"orderIndex":{"5ad4e2e2aff5b620a241d8ce":0},"relation":{"5ad4e2e2aff5b620a241d8ce":"object"}},"indexes":{"parentService":["5ad4e2e2aff5b620a241d8ce","5ad4e2e2aff5b620a241d8ce"],"parentId":["5ad4e2e2aff5b620a241d8ce","5ad4e2e2aff5b620a241d8ce"],"childService":["5ad4e2e2aff5b620a241d8ce","5ad4e2e2aff5b620a241d8ce"],"childId":["5ad4e2e2aff5b620a241d8ce","5ad4e2e2aff5b620a241d8ce"],"orderIndex":["5ad4e2e2aff5b620a241d8ce","5ad4e2e2aff5b620a241d8ce"],"relation":["5ad4e2e2aff5b620a241d8ce","5ad4e2e2aff5b620a241d8ce"]}},"scripts":{"edges":{},"maps":{},"indexes":{}}},"meta":{"messaging_type":"MESSAGE_TAG","tag":"PAID_PROMO"},"clonedNodes":["5b1ad62ef8b51d0095440710"],"method":"PATCH"}],"apps":{"data":[{"launchDate":"","status":"development","hiddenTemplate":false,"credentialsS3URI":"","bundleId":"","productId":"","keyboardOptions":{"keyboardAndroidAppStoreLink":"","keyboardAndroidShareText":"","keyboardIOSAppStoreLink":"","keyboardShareText":""},"appConfig":{},"sessionTime":300,"displayName":"Testing default vars again","rlock":false,"rlockinfo":{},"showInAnalytics":0,"mixpanel":false,"product":"bot","name":"Testing-default-vars-again","platform":"fbmessenger","orgId":"596933b574c85341deac27b2","links":{"analyticspagetypes":["59c19f244ca8fc015b183338","59c4335493bc3331e27ef401"],"appvars":["5ad4e2e296be4224a958cbd0","5ad4e2e296be4224a958cbd1","5ad4e2e296be4224a958cbd5","5ad4e2e296be4224a958cbcf","5ad4e2e296be4224a958cbd6","5ad4e2e296be4224a958cbd2","5ad4e2e296be4224a958cbd4","5ad4e2e296be4224a958cbd3","5ad519f896be4224a958cc02","5ad7a50155f80f3ee058e0c7","5adf4ec336a3564a88d839b4","5adf4ec336a3564a88d839b5","5adf4ec336a3564a88d839b6","5adf534655f80f3ee05969a1","5adf53465959c1369e17711b","5adfafd91cf1de681a22b0f9","5ae0c4995b88390baedec8c4","5ae77aa0bd44c9549c56ee75","5ae77aa084bc6d60bd6fa7b0","5ae77aa0f07877627b9dfff5","5ae77aa0c50b9317100a720b","5ae7845de915e90033edd36a","5b16ec3f61804c0095b7cfe5"],"bots":["5ad4e2e2aff5b620a241d8cf"],"icalevents":["5ad663478ef7e6c0e94274d3","5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9"],"triggers":["5ae794c03d39d74c898269d7","5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3"],"scripts":["5b199013ccfc8f0095911c8d","5b19abab4ecda00095e309ef"]},"createdAt":"2018-04-16T17:52:34.823Z","updatedAt":"2018-06-07T22:04:19.900Z","id":"5ad4e2e2aff5b620a241d8ce","apiStatus":"development","apiMessage":"","entityType":"apps","href":"https://antares-aptible.snapsmedia.io/api/apps/5ad4e2e2aff5b620a241d8ce","edges":{"appvars":{"edges":{},"maps":{},"indexes":{}},"analyticspagetypes":{"edges":{"59c19f244ca8fc015b183338":{"relation":"subject","orderIndex":0},"59c4335493bc3331e27ef401":{"relation":"subject","orderIndex":1}},"maps":{"orderIndex":{"59c19f244ca8fc015b183338":0,"59c4335493bc3331e27ef401":1},"relation":{"59c19f244ca8fc015b183338":"subject","59c4335493bc3331e27ef401":"subject"}},"indexes":{"orderIndex":["59c19f244ca8fc015b183338","59c19f244ca8fc015b183338","59c4335493bc3331e27ef401","59c4335493bc3331e27ef401"],"relation":["59c19f244ca8fc015b183338","59c4335493bc3331e27ef401","59c4335493bc3331e27ef401","59c19f244ca8fc015b183338"]}},"icalevents":{"edges":{"5ad663478ef7e6c0e94274d3":{"relation":"subject","parentService":"icalevents","parentId":"5ad663478ef7e6c0e94274d3","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af06d1a5d05781d57ed9429":{"relation":"subject","parentService":"icalevents","parentId":"5af06d1a5d05781d57ed9429","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af2049a0fbd077c52f708c4":{"relation":"subject","parentService":"icalevents","parentId":"5af2049a0fbd077c52f708c4","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af32e650d9c96676479a44a":{"relation":"subject","parentService":"icalevents","parentId":"5af32e650d9c96676479a44a","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af333f2ff3f6d8692ddc3b3":{"relation":"subject","parentService":"icalevents","parentId":"5af333f2ff3f6d8692ddc3b3","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af339e72b21886ee49b12c9":{"relation":"subject","parentService":"icalevents","parentId":"5af339e72b21886ee49b12c9","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0}},"maps":{"relation":{"5ad663478ef7e6c0e94274d3":"subject","5af06d1a5d05781d57ed9429":"subject","5af2049a0fbd077c52f708c4":"subject","5af32e650d9c96676479a44a":"subject","5af333f2ff3f6d8692ddc3b3":"subject","5af339e72b21886ee49b12c9":"subject"},"parentService":{"5ad663478ef7e6c0e94274d3":"icalevents","5af06d1a5d05781d57ed9429":"icalevents","5af2049a0fbd077c52f708c4":"icalevents","5af32e650d9c96676479a44a":"icalevents","5af333f2ff3f6d8692ddc3b3":"icalevents","5af339e72b21886ee49b12c9":"icalevents"},"parentId":{"5ad663478ef7e6c0e94274d3":"5ad663478ef7e6c0e94274d3","5af06d1a5d05781d57ed9429":"5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4":"5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a":"5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3":"5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9":"5af339e72b21886ee49b12c9"},"childService":{"5ad663478ef7e6c0e94274d3":"apps","5af06d1a5d05781d57ed9429":"apps","5af2049a0fbd077c52f708c4":"apps","5af32e650d9c96676479a44a":"apps","5af333f2ff3f6d8692ddc3b3":"apps","5af339e72b21886ee49b12c9":"apps"},"childId":{"5ad663478ef7e6c0e94274d3":"5ad4e2e2aff5b620a241d8ce","5af06d1a5d05781d57ed9429":"5ad4e2e2aff5b620a241d8ce","5af2049a0fbd077c52f708c4":"5ad4e2e2aff5b620a241d8ce","5af32e650d9c96676479a44a":"5ad4e2e2aff5b620a241d8ce","5af333f2ff3f6d8692ddc3b3":"5ad4e2e2aff5b620a241d8ce","5af339e72b21886ee49b12c9":"5ad4e2e2aff5b620a241d8ce"},"orderIndex":{"5ad663478ef7e6c0e94274d3":0,"5af06d1a5d05781d57ed9429":0,"5af2049a0fbd077c52f708c4":0,"5af32e650d9c96676479a44a":0,"5af333f2ff3f6d8692ddc3b3":0,"5af339e72b21886ee49b12c9":0}},"indexes":{"relation":["5ad663478ef7e6c0e94274d3","5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9"],"parentService":["5ad663478ef7e6c0e94274d3","5af339e72b21886ee49b12c9","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9","5af06d1a5d05781d57ed9429","5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5ad663478ef7e6c0e94274d3"],"parentId":["5ad663478ef7e6c0e94274d3","5af339e72b21886ee49b12c9","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9","5af06d1a5d05781d57ed9429","5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5ad663478ef7e6c0e94274d3"],"childService":["5ad663478ef7e6c0e94274d3","5af339e72b21886ee49b12c9","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9","5af06d1a5d05781d57ed9429","5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5ad663478ef7e6c0e94274d3"],"childId":["5ad663478ef7e6c0e94274d3","5af339e72b21886ee49b12c9","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9","5af06d1a5d05781d57ed9429","5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5ad663478ef7e6c0e94274d3"],"orderIndex":["5ad663478ef7e6c0e94274d3","5ad663478ef7e6c0e94274d3","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9","5af06d1a5d05781d57ed9429","5af06d1a5d05781d57ed9429","5af2049a0fbd077c52f708c4","5af32e650d9c96676479a44a","5af333f2ff3f6d8692ddc3b3","5af339e72b21886ee49b12c9"]}},"triggers":{"edges":{"5ae794c03d39d74c898269d7":{"relation":"subject","parentService":"triggers","parentId":"5ae794c03d39d74c898269d7","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af334adff3f6d8692ddc3bd":{"relation":"object","parentService":"triggers","parentId":"5af334adff3f6d8692ddc3bd","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af33ad02b21886ee49b12d0":{"relation":"subject","parentService":"triggers","parentId":"5af33ad02b21886ee49b12d0","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5af3440bdd9b82aa6bab1b37":{"relation":"subject","parentService":"triggers","parentId":"5af3440bdd9b82aa6bab1b37","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5b0344ca56ff028430e91fb1":{"relation":"object","parentService":"triggers","parentId":"5b0344ca56ff028430e91fb1","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0},"5b183a6cc460cad1b33520d3":{"relation":"subject","parentService":"triggers","parentId":"5b183a6cc460cad1b33520d3","childService":"apps","childId":"5ad4e2e2aff5b620a241d8ce","orderIndex":0}},"maps":{"relation":{"5ae794c03d39d74c898269d7":"subject","5af334adff3f6d8692ddc3bd":"object","5af33ad02b21886ee49b12d0":"subject","5af3440bdd9b82aa6bab1b37":"subject","5b0344ca56ff028430e91fb1":"object","5b183a6cc460cad1b33520d3":"subject"},"parentService":{"5ae794c03d39d74c898269d7":"triggers","5af334adff3f6d8692ddc3bd":"triggers","5af33ad02b21886ee49b12d0":"triggers","5af3440bdd9b82aa6bab1b37":"triggers","5b0344ca56ff028430e91fb1":"triggers","5b183a6cc460cad1b33520d3":"triggers"},"parentId":{"5ae794c03d39d74c898269d7":"5ae794c03d39d74c898269d7","5af334adff3f6d8692ddc3bd":"5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0":"5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37":"5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1":"5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3":"5b183a6cc460cad1b33520d3"},"childService":{"5ae794c03d39d74c898269d7":"apps","5af334adff3f6d8692ddc3bd":"apps","5af33ad02b21886ee49b12d0":"apps","5af3440bdd9b82aa6bab1b37":"apps","5b0344ca56ff028430e91fb1":"apps","5b183a6cc460cad1b33520d3":"apps"},"childId":{"5ae794c03d39d74c898269d7":"5ad4e2e2aff5b620a241d8ce","5af334adff3f6d8692ddc3bd":"5ad4e2e2aff5b620a241d8ce","5af33ad02b21886ee49b12d0":"5ad4e2e2aff5b620a241d8ce","5af3440bdd9b82aa6bab1b37":"5ad4e2e2aff5b620a241d8ce","5b0344ca56ff028430e91fb1":"5ad4e2e2aff5b620a241d8ce","5b183a6cc460cad1b33520d3":"5ad4e2e2aff5b620a241d8ce"},"orderIndex":{"5ae794c03d39d74c898269d7":0,"5af334adff3f6d8692ddc3bd":0,"5af33ad02b21886ee49b12d0":0,"5af3440bdd9b82aa6bab1b37":0,"5b0344ca56ff028430e91fb1":0,"5b183a6cc460cad1b33520d3":0}},"indexes":{"relation":["5ae794c03d39d74c898269d7","5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3","5ae794c03d39d74c898269d7","5af334adff3f6d8692ddc3bd","5b0344ca56ff028430e91fb1"],"parentService":["5ae794c03d39d74c898269d7","5b183a6cc460cad1b33520d3","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3","5af334adff3f6d8692ddc3bd","5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5ae794c03d39d74c898269d7"],"parentId":["5ae794c03d39d74c898269d7","5b183a6cc460cad1b33520d3","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3","5af334adff3f6d8692ddc3bd","5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5ae794c03d39d74c898269d7"],"childService":["5ae794c03d39d74c898269d7","5b183a6cc460cad1b33520d3","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3","5af334adff3f6d8692ddc3bd","5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5ae794c03d39d74c898269d7"],"childId":["5ae794c03d39d74c898269d7","5b183a6cc460cad1b33520d3","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3","5af334adff3f6d8692ddc3bd","5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5ae794c03d39d74c898269d7"],"orderIndex":["5ae794c03d39d74c898269d7","5ae794c03d39d74c898269d7","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3","5af334adff3f6d8692ddc3bd","5af334adff3f6d8692ddc3bd","5af33ad02b21886ee49b12d0","5af3440bdd9b82aa6bab1b37","5b0344ca56ff028430e91fb1","5b183a6cc460cad1b33520d3"]}},"scripts":{"edges":{},"maps":{},"indexes":{}},"bots":{"edges":{},"maps":{},"indexes":{}}},"method":"PATCH"}]},"rules":{"data":[{"action":"Changed","operator":"","value":"true","time":"hasEver","rlock":false,"rlockinfo":{},"resourceType":"states","resourceName":"Catch All Block","resourceId":"5ad4e2e2aff5b620a241d8d5","orgId":"596933b574c85341deac27b2","links":{"triggers":["5b0344ca56ff028430e91fb1"]},"createdAt":"2018-05-21T22:15:34.790Z","updatedAt":"2018-06-08T18:51:30.884Z","clonedNodes":["5b1ad62ff8b51d0095440718"],"id":"5b0344ca56ff028430e91fb2","apiStatus":"200","apiMessage":"OK","entityType":"rules","href":"https://antares-aptible.snapsmedia.io/api/rules/5b0344ca56ff028430e91fb2","edges":{"triggers":{"edges":{"5b0344ca56ff028430e91fb1":{"relation":"subject","parentService":"triggers","parentId":"5b0344ca56ff028430e91fb1","childService":"rules","childId":"5b0344ca56ff028430e91fb2","orderIndex":0}},"maps":{"relation":{"5b0344ca56ff028430e91fb1":"subject"},"parentService":{"5b0344ca56ff028430e91fb1":"triggers"},"parentId":{"5b0344ca56ff028430e91fb1":"5b0344ca56ff028430e91fb1"},"childService":{"5b0344ca56ff028430e91fb1":"rules"},"childId":{"5b0344ca56ff028430e91fb1":"5b0344ca56ff028430e91fb2"},"orderIndex":{"5b0344ca56ff028430e91fb1":0}},"indexes":{"relation":["5b0344ca56ff028430e91fb1","5b0344ca56ff028430e91fb1"],"parentService":["5b0344ca56ff028430e91fb1","5b0344ca56ff028430e91fb1"],"parentId":["5b0344ca56ff028430e91fb1","5b0344ca56ff028430e91fb1"],"childService":["5b0344ca56ff028430e91fb1","5b0344ca56ff028430e91fb1"],"childId":["5b0344ca56ff028430e91fb1","5b0344ca56ff028430e91fb1"],"orderIndex":["5b0344ca56ff028430e91fb1","5b0344ca56ff028430e91fb1"]}}},"method":"PATCH"}]},"rulesets":{"data":[{"ruleSetType":"any","rlock":false,"rlockinfo":{},"name":"","orgId":"596933b574c85341deac27b2","links":{},"createdAt":"2018-05-21T22:15:34.787Z","updatedAt":"2018-06-08T18:51:30.508Z","clonedNodes":["5b1ad62ef8b51d0095440711"],"id":"5b0344ca56ff028430e91fb3","apiStatus":"200","apiMessage":"OK","entityType":"rulesets","href":"https://antares-aptible.snapsmedia.io/api/rulesets/5b0344ca56ff028430e91fb3","edges":{"rulesets":{"edges":{"5b2024ff89880d243668acef":{"parentService":"rulesets","parentId":"5b0344ca56ff028430e91fb3","childService":"rulesets","childId":"5b2024ff89880d243668acef","orderIndex":0}}}},"method":"PATCH"}],"rules":{"data":[]},"rulesets":{"data":[{"id":"5b2024ff89880d243668acef","name":"","ruleSetType":"all","orgId":"596933b574c85341deac27b2","rlock":"","rlockinfo":{},"method":"POST","appId":"5ad4e2e2aff5b620a241d8ce","edges":{"rules":{"edges":{"5b2024ff89880d243668acf0":{"parentService":"rulesets","parentId":"5b2024ff89880d243668acef","childService":"rules","childId":"5b2024ff89880d243668acf0","orderIndex":0}}}}}],"rules":{"data":[{"id":"5b2024ff89880d243668acf0","resourceType":"funnels","resourceName":"addedentity","resourceId":"addedentity","action":"Entered","operator":"","value":"true","time":"","orgId":"596933b574c85341deac27b2","rlock":"","rlockinfo":{},"method":"POST","appId":"5ad4e2e2aff5b620a241d8ce"}]}}}}},"structure":{"triggers":{"data":[],"apps":{"data":[]},"rules":{"data":[]},"rulesets":{"data":[],"rules":{"data":[]},"rulesets":{"data":[],"rules":{"data":[]}}}}},"delinks":[]},
 }
 
 export const testGraphStateAfterDelink = {};
