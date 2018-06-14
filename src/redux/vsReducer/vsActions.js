@@ -1,11 +1,13 @@
 import gActions, { Atype as gAtype } from '../graphReducer/graphActions';
 import { parseVSdata, getEdgeId } from './common';
+import { generateEntityFromSchema } from '../schemaReducer/schemaGetters';
 
 const ADD_VS = 'vs/add_vs';
 const CLEAR_VS = 'vs/clear_vs';
 const SET_ROOT = 'vs/set_root';
 const ADD_CHILD = 'vs/add_child';
 const REORDER_CHILDREN = 'vs/reorder_children';
+const ADD_AND_LINK_ENTITY = 'vs/add_and_link_entity';
 
 const addVS = (vsId, actions, rootId) => ({
   type: ADD_VS,
@@ -68,21 +70,36 @@ export const updateOrdering = (vsId, parentId) => orderedChildIds => ({
   )
 });
 
-// export const addChild = (vsId, parentId) => (childId, service, data) => {
-//   const actions = [
-//     addNode({ id, data, nodeType: service }),
-//     link()
-//   ]
-//   return {
-//     type: ADD_CHILD,
-//     actions
-//   };
-// }
-
 // TODO: test...
+// NOTE: cannot be used with bindactioncreator in the same way
+const addNewEntity = (vsId, dispatch = () => {}, parentId) => (schema, initialValues, initialEdgeData) => {
+  const id = initialValues.id || 'new-id-run-bson-object-id-here';
+  const entityFromSchema = generateEntityFromSchema(schema);
+  const newEntity = Object.assign({}, entityFromSchema, initialValues);
+  const addAction = Object.assign(gActions.addNode({
+    id,
+    data: newEntity,
+    nodeType: schema.service
+  }), { vsId, updateStatus: 'new' });
 
-const addEntity = vsId => node => Object.assign(gActions.addNode(node),
-  { vsId, updateStatus: 'new' });
+  let action;
+  if (!parentId) action = addAction;
+  else {
+    const linkAction = linkEntities(vsId)(parentId, id, initialEdgeData);
+    const addAndLink = {
+      type: ADD_AND_LINK_ENTITY,
+      vsId,
+      actions: [addAction, linkAction]
+    }
+    action = addAndLink;
+  }
+
+  return {
+    id,
+    action, // for testing purposes
+    dispatch: () => dispatch(action)
+  }
+}
 
 const initLink = vsId => edge => Object.assign(gActions.addEdge(edge),
   { vsId, updateStatus: 'unchanged' });
@@ -119,7 +136,7 @@ const Action = {
   updateOrdering,
 
   // TODO: test
-  addEntity,
+  addNewEntity,
   // addEntityToParent ?
   clearVS,
 
@@ -131,7 +148,8 @@ export const Atype = {
   ADD_VS,
   CLEAR_VS,
   SET_ROOT,
-  REORDER_CHILDREN
+  REORDER_CHILDREN,
+  ADD_AND_LINK_ENTITY
 };
 
 export default Action;

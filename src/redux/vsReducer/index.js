@@ -15,9 +15,9 @@ const INIT_EDGE_DATA = {
 const nodeDataReducer = (nData = INIT_NODE_DATA, action) => {
   switch (action.type) {
     case gAtype.ADD_NODE: {
-      const { updateStatus } = action;
+      const { updateStatus, data } = action;
       return {
-        entity: {},
+        entity: updateStatus === 'new' ? data : {},
         updateStatus: updateStatus || nData.updateStatus
       }
     }
@@ -98,6 +98,7 @@ const vsreducer = (state = {}, action) => {
       const newVS = Object.assign({}, state[vsId], { rootId });
       return Object.assign({}, state, { [vsId]: newVS });
     }
+    case vsAtype.ADD_AND_LINK_ENTITY:
     case vsAtype.REORDER_CHILDREN: {
       const { actions = [{}] } = action;
       const newState = actions.reduce(graphReducer, vs);

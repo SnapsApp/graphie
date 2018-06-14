@@ -3,7 +3,6 @@ import vsReducer from './index';
 import Action from './vsActions';
 import { find, StructureGrapher } from './vsGetters';
 import dataReducer, { addToDataBranch } from '../dataReducer';
-
 import {
   testStructure,
   testResponse,
@@ -11,7 +10,9 @@ import {
   parseVSdata,
   testEntities,
   makeNode,
-  expectNode } from './common'
+  expectNode,
+  fauxSchema,
+} from './common'
 
 describe('vs reducer', () => {
   it('should initialize as an empty object', () => {
@@ -87,22 +88,86 @@ describe('vs reducer', () => {
     expect(rootId).toEqual("59c19f324ca8fc015b183339");
     expect(Object.keys(edges).length).toEqual(19);
   });
+  it('should be able to add a new entity', () => {
+    const vsId = 'aslkjdf';
+    const id = 'newentity';
+    const generatedEntity = Action.addNewEntity(vsId)(fauxSchema.schema, { id, name: 'Hoo nana', active: true })
+
+    expect(generatedEntity.id).toEqual(id);
+
+    const populatedVS = [Action.addVS(vsId), generatedEntity.action].reduce(vsReducer, undefined);
+    expect(populatedVS[vsId].nodes[id]).toEqual({
+      id: 'newentity',
+      data: {
+        entity: {
+          active: true,
+          appId: undefined,
+          blacklistUsers: undefined,
+          detailType: undefined,
+          displayIcon: 'ion-ionic',
+          id: 'newentity',
+          name: 'Hoo nana',
+          meta: undefined
+        },
+        updateStatus: 'new'
+      },
+      incoming: {},
+      outgoing: {},
+      nodeType: 'fauxservices'
+    });
+  });
+  it('should be able to add a new entity and link it to a parent', () => {
+    const vsId = 'aslkjdf';
+    const id = 'newentity';
+    const entity = testEntities[0];
+    const parentNode = makeNode(entity, entity.service);
+    const addParent = Action.initEntity(vsId)(parentNode);
+    const generatedChild = Action.addNewEntity(vsId, () => {}, parentNode.id)(fauxSchema.schema, { id, name: 'Namehameha', active: true })
+
+    const populatedVS = [
+      Action.addVS(vsId),
+      addParent,
+      generatedChild.action
+    ].reduce(vsReducer, undefined);
+
+    expect(populatedVS[vsId].nodes[parentNode.id].outgoing).toEqual({ fauxservices: [ 'newentity-node123' ] });
+    expect(populatedVS[vsId].nodes[id]).toEqual({
+      id: 'newentity',
+      data: {
+        entity: {
+          active: true,
+          appId: undefined,
+          blacklistUsers: undefined,
+          detailType: undefined,
+          displayIcon: 'ion-ionic',
+          id: 'newentity',
+          name: 'Namehameha',
+          meta: undefined
+        },
+        updateStatus: 'new'
+      },
+      incoming: { banana: [ 'newentity-node123' ] },
+      outgoing: {},
+      nodeType: 'fauxservices'
+    });
+  });
 })
 
 describe('serialize for graph', () => {
-    const vsId = 'asdflkj';
-    const resp = graphTestData.virtualizeResp;
-    const populatedState = vsReducer(undefined, Action.populateVS(vsId, resp));
-    const dataState = dataReducer(undefined, addToDataBranch(resp));
+  const vsId = 'asdflkj';
+  const resp = graphTestData.virtualizeResp;
+  const populatedState = vsReducer(undefined, Action.populateVS(vsId, resp));
+  const dataState = dataReducer(undefined, addToDataBranch(resp));
 
-    const grapher = new StructureGrapher(graphTestData.structure, populatedState[vsId], dataState, "5ad8bd24c571e541973cd927");
+  const grapher = new StructureGrapher(graphTestData.structure, populatedState[vsId], dataState, "5ad8bd24c571e541973cd927");
 
   it('should be able to create structure/graph post body', () => {
     const {
       orgId,
       state,
       structure,
-      delinks } = grapher.getPostBody();
+      delinks
+    } = grapher.getPostBody();
 
     const expected = graphTestData.graphPostBody;
 
