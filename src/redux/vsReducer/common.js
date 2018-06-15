@@ -195,7 +195,403 @@ export const rulesetsSchema = {
 export const SCHEMAS = {
   rules: rulesSchema,
   rulesets: rulesetsSchema,
-  fauxservices: fauxSchema.schema
+  fauxservices: fauxSchema.schema,
+  triggers: {
+    "href": "https://snapsmedia.io/api/triggers/create",
+    "service": "triggers",
+    "action": "create",
+    "method": "POST",
+    "description": "Create a trigger.",
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic Auth"
+    },
+    "supports": [],
+    "policies": [
+      "hasGlobalScope"
+    ],
+    "contractAttributes": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "required": true
+      },
+      "orgId": {
+        "type": "string",
+        "required": true
+      },
+      "pushStateId": {
+        "type": "string",
+        "defaultsTo": ""
+      },
+      "eventName": {
+        "type": "string",
+        "in": [
+          "stateChanged",
+          "stateReceived",
+          "stateDelivered",
+          "stateSent",
+          "stateRead",
+          "stateTextInput",
+          "stateGroupChanged",
+          "notificationSent",
+          "funnelEntered",
+          "funnelCompleted",
+          "zoneEntered",
+          "zoneExited",
+          "intentSet",
+          "referralSet",
+          "appvarSet"
+        ]
+      },
+      "secondsFromNow": {
+        "type": "integer",
+        "defaultsTo": 0,
+        "transform": "parseInt"
+      },
+      "description": {
+        "description": "Event description.",
+        "type": "string",
+        "defaultsTo": ""
+      },
+      "frequency": {
+        "description": "Frequency of secondsFromNow if not in seconds. Primarly for UI purposes.",
+        "type": "string",
+        "in": [
+          "seconds",
+          "minutes",
+          "hours",
+          "days",
+          "weeks"
+        ],
+        "defaultsTo": "seconds"
+      },
+      "isRulesEng": {
+        "description": "A flag to determine if a trigger event was created on the new rules engine system.",
+        "type": "boolean",
+        "defaultsTo": true,
+        "transform": "booleanize"
+      },
+      "active": {
+        "description": "(DEPRECATED - see production and staging) A flag to defer or suspend a rule event, so that it can be resumed later.",
+        "type": "boolean",
+        "defaultsTo": false,
+        "transform": "booleanize"
+      },
+      "production": {
+        "description": "A flag to defer or suspend a production rule event, so that it can be resumed later.",
+        "type": "boolean",
+        "defaultsTo": false,
+        "transform": "booleanize"
+      },
+      "staging": {
+        "description": "A flag to defer or suspend a staging rule event, so that it can be resumed later.",
+        "type": "boolean",
+        "defaultsTo": false,
+        "transform": "booleanize"
+      },
+      "triggerSentence": {
+        "description": "Triggering rule in a human readable format for display purposes.",
+        "type": "string",
+        "defaultsTo": ""
+      },
+      "triggerEvents": {
+        "type": "array",
+        "defaultsTo": [],
+        "description": "An array of event names (see discover/events/create) that will trigger the event."
+      },
+      "performAction": {
+        "type": "string",
+        "in": [
+          "createNotification",
+          "createICalEvent",
+          "runScript"
+        ],
+        "description": "The action to perform. Run script will look for linked scripts and execute them."
+      },
+      "actionOptions": {
+        "type": "object",
+        "description": "Options to be passed into the action when triggered. For notifications, this would be a notification object. You can use variables like $appUserId, $appId, $orgId, $pixelId, and any other eventProperties on the event, which will be subsituted at trigger time."
+      },
+      "meta": {
+        "type": "object"
+      }
+    },
+    "expectHttpStatus": "201",
+    "handleHttpStatus": [
+      400,
+      401,
+      403,
+      404,
+      409,
+      422,
+      429,
+      500
+    ],
+    "requestBodyExamples": [],
+    "responseBodyExamples": [],
+    "X-Response-Headers": [],
+    "public": false,
+    "edgeDefinitions": {},
+    "after": [
+      "cacheTrigger"
+    ],
+    "before": [
+      "epicBaconWin"
+    ],
+    "rlock": false,
+    "rlockinfo": {},
+    "relations": [
+      "apps",
+      "scripts",
+      "rules",
+      "rulesets"
+    ]
+  },
+  apps: {
+    "href": "https://snapsmedia.io/api/apps/create",
+    "service": "apps",
+    "action": "create",
+    "method": "POST",
+    "description": "",
+    "headers": {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic Auth"
+    },
+    "supports": [
+      "batch",
+      "compound"
+    ],
+    "policies": [
+      "hasGlobalScope"
+    ],
+    "contractAttributes": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "alphanumericdashed": true,
+        "notNull": true,
+        "truthy": true,
+        "transform": "spaceToDash",
+        "ui": {
+          "component": "input",
+          "attributes": {
+            "type": "text",
+            "title": "App Name"
+          },
+          "label": "App Name"
+        }
+      },
+      "launchDate": {
+        "type": "string",
+        "defaultsTo": "",
+        "transform": "dateKey"
+      },
+      "status": {
+        "type": "string",
+        "in": [
+          "production",
+          "development",
+          "retired"
+        ],
+        "defaultsTo": "development"
+      },
+      "hiddenTemplate": {
+        "type": "boolean",
+        "transform": "booleanize",
+        "defaultsTo": false,
+        "description": "for hiding template apps"
+      },
+      "product": {
+        "type": "string",
+        "required": true,
+        "in": [
+          "keyboard",
+          "stickerPack",
+          "bot",
+          "lookBuilder"
+        ],
+        "ui": {
+          "component": "dropdown",
+          "attributes": {
+            "title": "Product"
+          },
+          "label": "Product"
+        }
+      },
+      "platform": {
+        "type": "string",
+        "required": true,
+        "transform": "toLowerCase",
+        "in": [
+          "ios",
+          "android",
+          "fbmessenger",
+          "webservices",
+          "slack",
+          "kik",
+          "alexa",
+          "webapplications",
+          "keywordapps",
+          "imessage",
+          "skype",
+          "googleassistant",
+          "twitter",
+          "web"
+        ],
+        "ui": {
+          "component": "dropdown",
+          "attributes": {
+            "title": "Platform"
+          },
+          "label": "Platform"
+        }
+      },
+      "credentialsS3URI": {
+        "type": "string",
+        "defaultsTo": ""
+      },
+      "bundleId": {
+        "type": "string",
+        "defaultsTo": ""
+      },
+      "productId": {
+        "type": "string",
+        "defaultsTo": ""
+      },
+      "orgId": {
+        "type": "string",
+        "required": true,
+        "ui": {
+          "component": "input",
+          "attributes": {
+            "type": "hidden"
+          }
+        }
+      },
+      "keyboardOptions": {
+        "type": "object",
+        "defaultsTo": {
+          "keyboardAndroidAppStoreLink": "",
+          "keyboardAndroidShareText": "",
+          "keyboardIOSAppStoreLink": "",
+          "keyboardShareText": ""
+        }
+      },
+      "appConfig": {
+        "type": "object",
+        "defaultsTo": {}
+      },
+      "sessionTime": {
+        "type": "integer",
+        "defaultsTo": 300
+      },
+      "displayName": {
+        "type": "string",
+        "defaultsTo": "",
+        "ui": {
+          "component": "input",
+          "attributes": {
+            "type": "text",
+            "title": "App Display Name"
+          },
+          "label": "App Display Name"
+        }
+      },
+      "rlock": {
+        "type": "boolean",
+        "transform": "booleanize",
+        "defaultsTo": false
+      },
+      "rlockinfo": {
+        "description": "add keys lockedby, message and time to provide lock info",
+        "type": "object",
+        "defaultsTo": {}
+      },
+      "showInAnalytics": {
+        "description": "show new bot analytics - 0 is none, 1 is only on alpha, 2 is for beta",
+        "type": "integer",
+        "defaultsTo": 0,
+        "in": [
+          0,
+          1,
+          2
+        ],
+        "ui": {
+          "component": "dropdown",
+          "attributes": {
+            "title": "To show new bot analytics - 0 is none, 1 is only on alpha, 2 is for beta"
+          },
+          "label": "Show in Analytics"
+        }
+      },
+      "id": {
+        "type": "string"
+      },
+      "mixpanel": {
+        "type": "boolean",
+        "defaultsTo": false,
+        "transform": "booleanize"
+      },
+      "appIdForAnalytics": {
+        "type": "string"
+      }
+    },
+    "expectHttpStatus": "201",
+    "handleHttpStatus": [
+      400,
+      401,
+      403,
+      404,
+      409,
+      422,
+      429,
+      500
+    ],
+    "requestBodyExamples": [],
+    "responseBodyExamples": [],
+    "X-Response-Headers": [],
+    "edgeDefinitions": {},
+    "after": [
+      "appsCreate",
+      "syncEntityToSQL"
+    ],
+    "layout": [
+      [
+        "name",
+        "product"
+      ],
+      [
+        "platform",
+        "showInAnalytics"
+      ],
+      [
+        "orgId"
+      ]
+    ],
+    "relations": [
+      "app_users",
+      "brands",
+      "categories",
+      "bots",
+      "assets",
+      "appvars",
+      "extensions",
+      "containerapps",
+      "contentkeys",
+      "icalevents",
+      "customcharts",
+      "fbpages",
+      "scripts",
+      "triggers",
+      "rules",
+      "analyticspagetypes",
+      "funnels",
+      "integrations"
+    ]
+  }
 }
 
 export const testStructure = {

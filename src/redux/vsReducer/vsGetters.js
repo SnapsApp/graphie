@@ -215,14 +215,14 @@ export class StructureGrapher {
     this.entitiesMap = this.makeEntitiesMap(vsState.nodes, dataState);
   }
   updateState(vsState) {
-    this.initState(this.structure, vsState, this.dataState, this.orgId);
+    this.initState(this.structure, vsState, this.dataState, this.orgId, this.schemas);
   }
 
   relationExists(ownService, otherService) {
     return this.schemas[ownService].relations.includes(otherService);
   }
 
-  getEdgesForId = id => this.edgeMap[id].reduce((acc, edge) => {
+  getEdgesForId = id => this.edgesMap[id].reduce((acc, edge) => {
     const { data } = edge;
     const isChild = data.childId === id;
     const ownService = isChild ? data.parentService : data.childService;
@@ -251,7 +251,7 @@ export class StructureGrapher {
       const newEntity = Object.assign({}, entity, changes);
       const { edges: newEdges, hasUpdatedEdges } = this.getEdgesForId(id);
 
-      newEntity.edges = Object.assign(newEntity.edges, newEdges);
+      newEntity.edges = Object.assign(newEntity.edges || {}, newEdges);
 
       if (updateStatus === 'new') newEntity.method = 'POST';
       if (hasUpdatedEdges && updateStatus === 'updated') newEntity.method = 'PATCH';

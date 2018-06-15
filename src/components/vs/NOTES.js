@@ -2,7 +2,9 @@
 TODO: fix nodereducer... the parent node service is wrong. WRONG
 TODO: figure out what ^-- means
 TODO: write up examples
-TODO: addEntity - should that be placed in VSProvider or VSEntity? Or left as a totally pure function taking schema and parentId?
+TODO: orderIndex is still a lil f'd when it's > 0. AND test is not passing
+TODO: it's unclear how we currently handle linking. is a link automatically two-way? Or no?
+
 
 thoughts:
 * when will you have a case of editing multiple entities before clicking save? (rules and rulesets)

@@ -114,7 +114,7 @@ const vsreducer = (state = {}, action) => {
         const parent = vs.nodes[origin];
         const child = addAction;
         const orderIndex = getLinkedServiceEdges(vs, parent, child.nodeType).reduce((oi, edge) => {
-          return Math.max(edge.orderIndex, oi)
+          return Math.max(edge.orderIndex || 0, oi)
         }, -1) + 1;
 
         linkAction.data = addStandardEdgeData(
