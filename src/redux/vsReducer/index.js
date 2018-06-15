@@ -1,7 +1,8 @@
 import { createGraphReducer, createNodesReducer, createEdgesReducer, INIT_STATE, allEdges } from '../graphReducer';
 import { Atype as gAtype, default as gAction } from '../graphReducer/graphActions';
 import { Atype as vsAtype } from './vsActions';
-import { addStandardEdgeData, getLinkedServiceNodes, getEdgeId } from './common';
+import { getLinkedServiceEdges } from './vsGetters';
+import { addStandardEdgeData, getEdgeId } from './common';
 
 const INIT_NODE_DATA = {
   entity: undefined,
@@ -98,9 +99,32 @@ const vsreducer = (state = {}, action) => {
       const newVS = Object.assign({}, state[vsId], { rootId });
       return Object.assign({}, state, { [vsId]: newVS });
     }
-    case vsAtype.ADD_AND_LINK_ENTITY:
     case vsAtype.REORDER_CHILDREN: {
       const { actions = [{}] } = action;
+      const newState = actions.reduce(graphReducer, vs);
+      newState.rootId = vs.rootId;
+      return Object.assign({}, state, { [vsId]: newState });
+    }
+    case vsAtype.ADD_AND_LINK_ENTITY: {
+      const { actions = [{}] } = action;
+      const addAction = actions[0];
+      const linkAction = actions[1];
+      if (linkAction) {
+        const { edgeData, origin, destin } = linkAction;
+        const parent = vs.nodes[origin];
+        const child = addAction;
+        const orderIndex = getLinkedServiceEdges(vs, parent, child.nodeType).reduce((oi, edge) => {
+          return Math.max(edge.orderIndex, oi)
+        }, -1) + 1;
+
+        linkAction.data = addStandardEdgeData(
+          parent.id,
+          parent.nodeType,
+          child.id,
+          child.nodeType,
+          Object.assign({ orderIndex }, edgeData)
+        );
+      }
       const newState = actions.reduce(graphReducer, vs);
       newState.rootId = vs.rootId;
       return Object.assign({}, state, { [vsId]: newState });
@@ -109,7 +133,17 @@ const vsreducer = (state = {}, action) => {
       const { edgeData, origin, destin } = action;
       const parent = vs.nodes[origin];
       const child = vs.nodes[destin];
-      const edgeWithStandardKeys = addStandardEdgeData(parent.id, parent.nodeType, child.id, child.nodeType, edgeData);
+      const orderIndex = getLinkedServiceEdges(vs, parent, child.nodeType).reduce((oi, edge) => {
+        return Math.max(edge.orderIndex, oi)
+      }, -1) + 1;
+
+      const edgeWithStandardKeys = addStandardEdgeData(
+        parent.id,
+        parent.nodeType,
+        child.id,
+        child.nodeType,
+        Object.assign({ orderIndex }, edgeData)
+      );
 
       packedAction = Object.assign(action, { data: edgeWithStandardKeys });
       break;

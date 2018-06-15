@@ -22,8 +22,10 @@ export const getVS = (state, props) =>  {
   return state.vs[vsId];
 }
 
-export const getLinkedServiceEdges = (vs, fromNode, service, direction = OUTGOING) =>
-  fromNode[direction][service].map(id => vs.edges[id]);
+export const getLinkedServiceEdges = (vs, fromNode, service, direction = OUTGOING) => {
+  const edges = fromNode[direction][service] || [];
+  return edges.map(id => vs.edges[id]);
+}
 
 export const getLinkedServiceNodes = (vs, fromNode, service, direction = OUTGOING) => {
   const otherNode = EdgeDir[direction].otherNode;
@@ -182,6 +184,7 @@ export class StructureGrapher {
 
   static idToEdgesMap = edgesState => Object.keys(edgesState).reduce((map, edgeKey) => {
     const { edge, updateStatus } = edgesState[edgeKey].data;
+
     const childId = edge.childId;
     const parentId = edge.parentId;
 
@@ -199,36 +202,44 @@ export class StructureGrapher {
     return map;
   }, {}) // { [id]: { data, updateStatus } };
 
-  static getEdgesForId = (edgeMap, id) => edgeMap[id].reduce((acc, edge) => {
-    const { data } = edge;
-    const isChild = data.childId === id;
-    const service = isChild ? data.childService : data.parentService;
-
-    acc.hasUpdatedEdges = acc.hasUpdatedEdges || edge.updateStatus === 'updated';
-    if (!acc[service]) acc[service] = { edges: {} };
-
-    acc[service].edges[id] = data;
-
-    return acc;
-  }, {
-    edges: {}, // { service: { edges { [id]: edgeData } } }
-    hasUpdatedEdges: false
-  })
-
   constructor(...args) {
     this.initState(...args);
   }
-  initState(structure, vsState, dataState, orgId) {
+  initState(structure, vsState, dataState, orgId, schemas) {
     this.orgId = orgId;
     this.structure = structure;
     this.vsState = vsState;
     this.dataState = dataState;
+    this.schemas = schemas;
     this.edgesMap = StructureGrapher.idToEdgesMap(vsState.edges);
     this.entitiesMap = this.makeEntitiesMap(vsState.nodes, dataState);
   }
   updateState(vsState) {
     this.initState(this.structure, vsState, this.dataState, this.orgId);
   }
+
+  relationExists(ownService, otherService) {
+    return this.schemas[ownService].relations.includes(otherService);
+  }
+
+  getEdgesForId = id => this.edgeMap[id].reduce((acc, edge) => {
+    const { data } = edge;
+    const isChild = data.childId === id;
+    const ownService = isChild ? data.parentService : data.childService;
+    const otherService = isChild ? data.childService : data.parentService;
+
+    if (this.relationExists(ownService, otherService)) {
+      acc.hasUpdatedEdges = acc.hasUpdatedEdges || edge.updateStatus === 'updated' || edge.updateStatus === 'new';
+      if (!acc.edges[otherService]) acc.edges[otherService] = { edges: {} };
+
+      acc.edges[otherService].edges[id] = data;
+    }
+
+    return acc;
+  }, {
+    edges: {}, // { service: { edges { [id]: edgeData } } }
+    hasUpdatedEdges: false
+  })
 
   makeEntitiesMap() {
     const nodes = this.vsState.nodes;
@@ -238,7 +249,7 @@ export class StructureGrapher {
       const entity = this.dataState[service][id];
 
       const newEntity = Object.assign({}, entity, changes);
-      const { edges: newEdges, hasUpdatedEdges } = StructureGrapher.getEdgesForId(this.edgesMap, id);
+      const { edges: newEdges, hasUpdatedEdges } = this.getEdgesForId(id);
 
       newEntity.edges = Object.assign(newEntity.edges, newEdges);
 
@@ -246,6 +257,7 @@ export class StructureGrapher {
       if (hasUpdatedEdges && updateStatus === 'updated') newEntity.method = 'PATCH';
 
       map[id] = newEntity;
+
       return map;
     }, {}) // { [id]: entity }
   }

@@ -134,11 +134,10 @@ const Action = {
   delinkEntities,
   updateEdgeToParent,
   updateOrdering,
-
-  // TODO: test
   addNewEntity,
-  // addEntityToParent ?
   clearVS,
+
+  // addEntityToParent ?
 
   // revertLink ?
   // graph ?
