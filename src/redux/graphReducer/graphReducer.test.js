@@ -136,10 +136,10 @@ describe('graph actions and reducer', () => {
     it('should not add the edge when an edge with the same id already exists', () => {
       const anotherEdge = Object.assign({}, edge, { data: 'new edge with same id' });
       const state = graphReducer(updatedState, addEdge(anotherEdge));
-      expect(updatedState.edges[edge.id]).toEqual(fillEdge(edge));
-      expect(updatedState.nodes[node1.id].outgoing[DEFAULT_NODE_TYPE])
+      expect(state.edges[edge.id]).toEqual(fillEdge(edge));
+      expect(state.nodes[node1.id].outgoing[DEFAULT_NODE_TYPE])
         .toEqual(expect.arrayContaining([edge.id]));
-      expect(updatedState.nodes[node2.id].incoming[DEFAULT_NODE_TYPE])
+      expect(state.nodes[node2.id].incoming[DEFAULT_NODE_TYPE])
         .toEqual(expect.arrayContaining([edge.id]));
     })
   });
@@ -187,7 +187,6 @@ describe('graph actions and reducer', () => {
     const populatedState = [addNode(node1), addNode(node2)]
       .reduce(graphReducer, undefined);
 
-    const stateWithEdges =
     it('should update edges', () => {
       const newData = {
         id: edge.id,
